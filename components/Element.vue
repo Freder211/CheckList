@@ -2,15 +2,14 @@
     <v-card>
         <v-card-title>{{title}}</v-card-title>
         <v-card-text>{{text}}</v-card-text>
-        <v-card-text>counter:{{counter}}</v-card-text>
         <v-card-actions>
             <v-btn
                 outlined
                 rounded
                 text
-                @click.native="increment"
+                @click.native="setChecked"
             >
-                Completato
+               Check
                <v-icon>mdi-checkbox-marked-circle</v-icon> 
             </v-btn>
         </v-card-actions>
@@ -45,8 +44,8 @@ export default {
     },
     
     methods: {
-        increment(){
-            this.counter++;
+        setChecked(){
+            checked=true;
         }
 
     }
