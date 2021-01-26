@@ -21,7 +21,7 @@
         </v-btn>
 
 
-        <Element v-for="task in tasks" :key="task" :title="task.title" :text="task.text" v-on:removed="remove"/>
+        <Task v-for="task in tasks" :key="task" :name="task.title" :description="task.text" v-on:removed="remove"/>
     </div>
 
 </template>
@@ -36,6 +36,11 @@
                 text: ""
             }
         },
+
+        props: {
+            test: int
+        },
+
         methods: {
             add(){
                 if (this.title != ""){

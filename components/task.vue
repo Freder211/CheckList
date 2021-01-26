@@ -1,8 +1,10 @@
 <template>
     <v-card>
-        <v-card-title>{{title}}</v-card-title>
-        <v-card-text>{{text}}</v-card-text>
+        <v-card-title>{{name}}</v-card-title>
+        <v-card-text v-show="descriptionEmpty">{{description}}</v-card-text>
         <v-card-actions>
+            <v-checkbox></v-checkbox>
+
             <v-btn
                 outlined
                 rounded
@@ -11,15 +13,6 @@
             >
                Remove
                <v-icon>mdi-checkbox-marked-circle</v-icon> 
-            </v-btn>
-
-            <v-btn
-                outlined
-                rounded
-                text
-
-            >
-                Edit
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -30,18 +23,19 @@ export default {
 
     data(){
         return {
-
+            descriptionEmpty: true
         }
     },
 
     //eseguito al momento della creazione del componente
     mounted(){ 
-        
+        if(this.description == "" || this.description == null)
+            this.descriptionEmpty=false;
     },
 
     props: {
-        title: String,
-        text: String,
+        name: String,
+        description: String,
     },
 
     //metodi con cache migliorata
@@ -50,7 +44,7 @@ export default {
     
     methods: {
         remove(){
-            this.$emit('removed', this.title);
+            this.$emit('removed', this.name);
         }
 
     }
