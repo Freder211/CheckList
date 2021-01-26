@@ -21,7 +21,7 @@
         </v-btn>
 
 
-        <Element v-for="element in lists" :key="element" :title="element.title" :text="element.text"/>
+        <Element v-for="task in tasks" :key="task" :title="task.title" :text="task.text" v-on:removed="remove"/>
     </div>
 
 </template>
@@ -31,7 +31,7 @@
         layout: "default2",
         data(){
             return {
-                lists: [],
+                tasks: [],
                 title: "",
                 text: ""
             }
@@ -39,7 +39,7 @@
         methods: {
             add(){
                 if (this.title != ""){
-                    this.lists.push({
+                    this.tasks.push({
                         title: this.title,
                         text: this.text
                     })
@@ -47,12 +47,12 @@
                     this.text="";
                 }
             },
-            remove(){
-
+            remove(checkedTitle){
+                for (var i=0; i<this.tasks.length; i++){
+                    if(this.tasks[i].title==checkedTitle)
+                        this.tasks.splice(i, 1);
+                }
             }
         }
     }
-
-    
-
 </script>

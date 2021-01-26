@@ -7,10 +7,19 @@
                 outlined
                 rounded
                 text
-                @click.native="setChecked"
+                @click="remove"
             >
-               Check
+               Remove
                <v-icon>mdi-checkbox-marked-circle</v-icon> 
+            </v-btn>
+
+            <v-btn
+                outlined
+                rounded
+                text
+
+            >
+                Edit
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -21,7 +30,7 @@ export default {
 
     data(){
         return {
-            
+
         }
     },
 
@@ -33,19 +42,15 @@ export default {
     props: {
         title: String,
         text: String,
-        checked: Boolean,
-
     },
 
+    //metodi con cache migliorata
     computed: {
-        isChecked(){
-            return this.checked || false;
-        },
     },
     
     methods: {
-        setChecked(){
-            checked=true;
+        remove(){
+            this.$emit('removed', this.title);
         }
 
     }
