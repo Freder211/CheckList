@@ -16,45 +16,73 @@
         </v-text-field>
 
         
-        <v-btn @click.native="add">
+        <v-btn @click.native="addNew">
             Add
         </v-btn>
 
-
-        <Task v-for="task in tasks" :key="task" :name="task.title" :description="task.text" v-on:removed="remove"/>
+        <div class="px-m-10">
+            <Task v-for="task in tasks"
+                :key="task"
+                :name="task.title"
+                :description="task.text"
+                :checked="task.checked"
+                v-on:removed="remove"
+            />
+        </div>
     </div>
 
 </template>
 
+
 <script>
+    
+    import storageUtils from '~/utils/storage.js';
+
     export default {
-        layout: "default2",
+        layout: "taskLayout",
         data(){
             return {
                 tasks: [],
                 title: "",
-                text: ""
+                text: "",
+                checked: false,
             }
         },
 
-        props: {
-            test: int
+        mounted(){
+            var list = storageUtils.getSelectedList();
+            if(list == -1) //TODO: mostrare errore in caso di -1 
+                return;
+
+            var tasks = list.tasks;
+            tasks.forEach(task => {
+                this.add(task);
+            });
         },
 
         methods: {
-            add(){
+            addNew(){
                 if (this.title != ""){
-                    this.tasks.push({
-                        title: this.title,
-                        text: this.text
-                    })
+                    var newTask = {name: this.title, description: this.text, checked: false};
+                    this.add(newTask);
+                    storageUtils.addTask(newTask);
                     this.title="";
                     this.text="";
                 }
             },
-            remove(checkedTitle){
+
+            add(task){
+                this.tasks.push({
+                    title: task.name,
+                    text: task.description,
+                    checked: task.checked
+                });
+            },
+
+            remove(removedTask){
+                storageUtils.removeTask(removedTask);
                 for (var i=0; i<this.tasks.length; i++){
-                    if(this.tasks[i].title==checkedTitle)
+                    if(this.tasks[i].title==removedTask)
                         this.tasks.splice(i, 1);
                 }
             }

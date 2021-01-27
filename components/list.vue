@@ -2,8 +2,8 @@
     <v-card>
         <v-text-field  
             v-model="name"
-            v-bind:readonly="this.editing"
-            v-bind:filled="!this.editing"
+            v-bind:readonly="!this.editing"
+            v-bind:filled="this.editing"
         >
         </v-text-field>
 
@@ -26,12 +26,20 @@
             Remove
         </v-btn>
 
-        <NuxtLink to="tasks" v-bind:test=1>Show</NuxtLink>
+        <v-btn
+            outlined
+            rounded
+            text
+            @click="show"
+        >
+            Show
+        </v-btn>
     </v-card>
 
 </template>
 
 <script>
+    import storageUtils from '~/utils/storage.js';
     export default {
         data() {
             return{
@@ -51,7 +59,17 @@
                 this.$emit('removed', this.name);
             },
             edit(){
+                if(!this.editing){ //inizio editing
+                    this.edit.oldName = this.name; // memorizzo il nome della lista in una variabile statica prima che venga modificato
+                }
+                else if(this.edit.oldName!=this.name){ //editing terminato
+                    storageUtils.renameList(this.edit.oldName, this.name);
+                }
                 this.editing = !this.editing;
+            },
+            show(){
+                storageUtils.setList(this.name); 
+                this.$router.push({name: 'tasks'});
             }
         }
     }

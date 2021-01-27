@@ -10,7 +10,7 @@
 
 
         
-        <v-btn @click.native="add">
+        <v-btn @click.native="addNew">
             Add
         </v-btn>
 
@@ -21,25 +21,41 @@
 </template>
 
 <script>
+    import storageUtils from '~/utils/storage.js';
     export default {
-        layout: "default2",
+        layout: "listLayout",
         data(){
             return {
                 lists: [],
                 name: "",
             }
         },
+
+        mounted(){
+            var lists = storageUtils.getAllLists();
+            for(var i in lists){
+                this.add(lists[i].name);
+            }
+        },
+        
         methods: {
-            add(){
+            addNew(){
                 if (this.name != ""){
-                    this.lists.push(this.name);
+                    var list = {name: this.name, tasks: []}
+                    storageUtils.newList(list);
+                    this.add(list.name);
                     this.name="";
                 }
             },
+            add(listName){
+                this.lists.push(listName);
+            },
             remove(removedList){
-              var index = this.lists.indexOf(removedList);
-              this.lists.splice(index, 1);
-            }
+                storageUtils.removeList(removedList);
+                var index = this.lists.indexOf(removedList);
+                this.lists.splice(index, 1);
+            },
+            
         }
     }
 </script>

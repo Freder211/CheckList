@@ -3,7 +3,7 @@
         <v-card-title>{{name}}</v-card-title>
         <v-card-text v-show="descriptionEmpty">{{description}}</v-card-text>
         <v-card-actions>
-            <v-checkbox></v-checkbox>
+            <v-checkbox v-model="checkedReactive"></v-checkbox>
 
             <v-btn
                 outlined
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import storageUtils from '~/utils/storage.js';
 export default {
 
     data(){
@@ -36,17 +37,24 @@ export default {
     props: {
         name: String,
         description: String,
+        checked: Boolean,
     },
 
-    //metodi con cache migliorata
     computed: {
+        checkedReactive: {
+            get(){
+                return this.checked;
+            },
+            set(val){
+                storageUtils.checkTask(this.name, val);
+            }
+        }
     },
     
     methods: {
         remove(){
             this.$emit('removed', this.name);
-        }
-
+        },
     }
 }
 </script>
