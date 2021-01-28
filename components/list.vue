@@ -1,40 +1,57 @@
 <template>
-    <v-card>
-        <v-text-field  
-            v-model="name"
-            v-bind:readonly="!this.editing"
-            v-bind:filled="this.editing"
-        >
-        </v-text-field>
+    <v-row>
+        <v-col>
+            <v-card>
+                <v-container class="fluid">
+                    <v-row>
 
-            
-        <v-btn
-            outlined
-            rounded
-            text
-            @click="edit"
-        >
-            Edit
-        </v-btn>
-        
-        <v-btn
-            outlined
-            rounded
-            text
-            @click="remove"
-        >
-            Remove
-        </v-btn>
+                        <v-col>
+                            <v-text-field  
+                                v-model="name"
+                                v-bind:readonly="!this.editing"
+                                v-bind:filled="this.editing"
+                            >
+                            </v-text-field>
+                        </v-col>
 
-        <v-btn
-            outlined
-            rounded
-            text
-            @click="show"
-        >
-            Show
-        </v-btn>
-    </v-card>
+                        <v-col>
+                            <v-btn
+                                outlined
+                                rounded
+                                text
+                                @click="edit"
+                            >
+                                Edit
+                            </v-btn>
+                        </v-col>
+
+                        <v-col>
+                            <v-btn
+                                outlined
+                                rounded
+                                text
+                                @click="remove"
+                            >
+                                Remove
+                            </v-btn>
+                        </v-col>
+
+                        <v-col>
+                            <v-btn
+                                outlined
+                                rounded
+                                text
+                                @click="show"
+                            >
+                                Show
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-container>
+
+            </v-card>
+        </v-col>
+    </v-row>
 
 </template>
 

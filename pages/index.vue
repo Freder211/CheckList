@@ -1,29 +1,35 @@
 <template>
-    <div id="elements">
-        <v-text-field 
-            type="text" 
-            v-model="name"
-            label="Name"
-        >
-        </v-text-field>
+        <v-container>
+            <v-row>
+                <v-col class="pl-15">
 
+                    <v-text-field 
+                        type="text" 
+                        v-model="name"
+                        label="Name"
+                        class="ml-15"
+                    >
+                    </v-text-field>
+                </v-col>
 
+                <v-col class="ml-2">
 
-        
-        <v-btn @click.native="addNew">
-            Add
-        </v-btn>
+                    <v-btn @click.native="addNew">
+                        Add
+                    </v-btn>
+                </v-col>
 
+            </v-row>
 
-        <List v-for="list in lists" :key="list" :name="list" v-on:removed="remove"/>
-    </div>
+            <List v-for="list in lists" :key="list" :name="list" v-on:removed="remove"/>
+        </v-container>
 
 </template>
 
 <script>
     import storageUtils from '~/utils/storage.js';
     export default {
-        layout: "listLayout",
+        //layout: "listLayout",
         data(){
             return {
                 lists: [],

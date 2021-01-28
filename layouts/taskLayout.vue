@@ -6,7 +6,7 @@
       group
     >
       <v-btn @click.native="back" value="left">
-        Back
+        <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
     
     </v-btn-toggle>

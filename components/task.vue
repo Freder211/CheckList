@@ -1,21 +1,37 @@
 <template>
-    <v-card>
-        <v-card-title>{{name}}</v-card-title>
-        <v-card-text v-show="descriptionEmpty">{{description}}</v-card-text>
-        <v-card-actions>
-            <v-checkbox v-model="checkedReactive"></v-checkbox>
+    <v-row>
+        <v-col>
+            <v-card>
+                <v-container class="fluid">
+                    <v-row>
+                        <v-col cols="2">
+                            <v-checkbox v-model="checkedReactive"></v-checkbox>
+                        </v-col>
 
-            <v-btn
-                outlined
-                rounded
-                text
-                @click="remove"
-            >
-               Remove
-               <v-icon>mdi-checkbox-marked-circle</v-icon> 
-            </v-btn>
-        </v-card-actions>
-    </v-card>
+                        <v-col cols="14">
+                            <v-card-title>{{name}}</v-card-title>
+                            <v-card-text v-show="descriptionEmpty">{{description}}</v-card-text>
+                        </v-col>
+
+                        <v-col cols="2">
+                            <v-btn
+                                outlined
+                                rounded
+                                text
+                                @click="remove"
+                            >
+                                <v-icon>mdi-close</v-icon> 
+                            </v-btn>
+                        </v-col>
+
+                    </v-row>
+                </v-container>
+                <v-card-actions>
+
+                </v-card-actions>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
