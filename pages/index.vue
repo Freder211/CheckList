@@ -1,22 +1,24 @@
 <template>
         <v-container>
             <v-row>
-                <v-col col="11">
+                <v-col>
 
                     <v-text-field 
                         type="text" 
                         v-model="name"
                         label="New list"
-                        class="ml-15"
+                        class="ml-0"
                         hide-details="true"
                     >
                     </v-text-field>
                 </v-col>
 
-                <v-col cols="1">
-                    <v-btn class="addListBtn mb-2 justify-content-center" @click.native="addNew">
-                        <v-icon>mdi-plus</v-icon>
-                    </v-btn>
+                <v-col md="1" sm="2" cols="3" class="pl-6">
+                    <div class="addListBtn">
+                        <v-btn class=" mb-2 justify-content-center" @click.native="addNew">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </div>
                 </v-col>
 
             </v-row>
@@ -25,6 +27,13 @@
         </v-container>
 
 </template>
+
+<style scoped>
+    .addListBtn {
+        margin-top: 18px;
+        align-content: center;
+    }
+</style>
 
 <script>
     import storageUtils from '~/utils/storage.js';

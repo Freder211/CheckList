@@ -3,56 +3,73 @@
         <v-col>
             <v-card>
                 <v-container class="fluid">
-                    <v-row>
-                        <v-col class="listTextFieldCol">
-                            <v-text-field  
-                                class="listTextField"
-                                v-model="name"
-                                v-bind:readonly="!this.editing"
-                                v-bind:filled="this.editing"
-                                hide-details="true"
-                                solo
-                                flat
-                            >
-                            </v-text-field>
-                        </v-col>
-
-                        <v-col class="listAction" cols="1">
-                            <div class="counter">
-                                <span>{{this.completedTasks}} / {{this.totalTasks}}</span>
+                    <v-row align="center" justify="center">
+                        <v-col cols="12" sm="12" md="8" lg="8">
+                            <div class="textFieldDiv">
+                                <v-text-field  
+                                    v-bind:class="{
+                                        listTextField: this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm
+                                    }"
+                                    ref="textField"
+                                    v-model="name"
+                                    v-bind:readonly="!this.editing"
+                                    v-bind:outlined="this.editing"
+                                    hide-details="true"
+                                    solo
+                                    flat
+                                >
+                                </v-text-field>
                             </div>
                         </v-col>
 
-                        <v-col cols="1" class="listAction" xs="4" sm="1">
-                            <v-btn
-                                tile
-                                class="cardElement"
-                                rounded
-                                text
-                                @click="edit"
-                            >
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
+                        <v-col class="listAction" cols="6" sm="3" md="1">
+                            <div class="utilityDiv">
+                                <v-progress-circular :size="50" v-bind:value="this.percentage">
+                                    <span class="counterSpan">{{this.completedTasks}} / {{this.totalTasks}}</span>
+                                </v-progress-circular>
+                            </div>
                         </v-col>
 
-                        <v-col cols="1" class="listAction" xs="4" sm="1">
+                        <v-col class="pa-0" cols="6" sm="3" md="1" lg="1" align-self="stretch">
+                                <v-btn
+                                    v-bind:color="(this.editing) ? 'green' : 'default' "
+                                    height="100%"
+                                    block
+                                    tile
+                                    class="cardElement"
+                                    rounded
+                                    text
+                                    @click="edit"
+                                >
+                                    <v-icon v-if="!this.editing">mdi-pencil</v-icon>
+                                    <v-icon v-if="this.editing">mdi-check-bold</v-icon>
+                                </v-btn>
+                        </v-col>
+
+                        <v-col class="pa-0" cols="6" sm="3" md="1" lg="1" align-self="stretch">
                             <v-btn
+                                min-height="70px"
+                                text
                                 tile
                                 class="cardElement"
-                                rounded
-                                text
+                                block
+                                height="100%"
                                 @click="remove"
+                                color="red"
                             >
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </v-col>
 
-                        <v-col cols="1" class="listAction" xs="4" md="2" lg="1">
+                        <v-col class="pa-0" cols="6" sm="3" md="1" lg="1" align-self="stretch">
+
                             <v-btn
+                                min-height="70px"
                                 tile
+                                color="primary"
+                                block
+                                height="100%"
                                 class="cardElement"
-                                rounded
-                                text
                                 @click="show"
                             >
                                 <v-icon>mdi-arrow-right</v-icon>
@@ -68,16 +85,15 @@
 </template>
 
 <style scoped>
-    .listTextField{
-        margin-top: 5px;
+    .utilityDiv{
+        text-align: center;
+        align-items: center;
     }
-    .cardElement{
-        margin-top: 8px;
+    .listTextField >>> input{
+            text-align: center
     }
-    .counter{
-        vertical-align: middle;
-        margin-top: 8px;
-        padding-top: 6px;
+    .textFieldDiv{
+        align-content: center;
     }
 </style>
 
@@ -89,12 +105,14 @@
                 editing: false,
                 totalTasks: 0,
                 completedTasks: 0,
+                percentage: 0,
             }
         },
 
         mounted(){
             this.totalTasks = storageUtils.getList(this.name).tasks.length;
             this.completedTasks = storageUtils.getComplitedTasks(this.name);
+            this.percentage = this.completedTasks*100/this.totalTasks
         },
 
         props: {
@@ -107,6 +125,7 @@
             edit(){
                 if(!this.editing){ //inizio editing
                     this.edit.oldName = this.name; // memorizzo il nome della lista in una variabile statica prima che venga modificato
+                    this.$refs.textField.focus();
                 }
                 else if(this.edit.oldName!=this.name){ //editing terminato
                     storageUtils.renameList(this.edit.oldName, this.name);

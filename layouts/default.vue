@@ -8,7 +8,7 @@
                 <v-icon v-if="this.darkMode">mdi-brightness-2</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn>
+            <v-btn @click="goGitHub">
                 GitHub
                 <v-icon>mdi-github</v-icon>
             </v-btn>
@@ -41,6 +41,9 @@
             this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
             this.darkMode = this.$vuetify.theme.dark;
         },
+        goGitHub(){
+            window.open("https://github.com/Freder211/CheckList", "_blank");    
+        }
     }
   }
 </script>
