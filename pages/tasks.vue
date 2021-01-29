@@ -2,12 +2,12 @@
     <div id="elements">
         <v-container>
             <v-row>
-                <v-col>
+                <v-col cols="1">
 
                     <v-btn-toggle
-                    tile
-                    color="deep-purple accent-3"
-                    group
+                        tile
+                        color="deep-purple accent-3"
+                        group
                     >
                         <v-btn @click.native="back" value="left">
                             <v-icon>mdi-arrow-left</v-icon>
@@ -16,8 +16,8 @@
 
                 </v-col>
 
-                <v-col>
-                    <h1>{{this.list.name}}</h1>
+                <v-col cols="11">
+                    <h1 class="listName">{{this.list.name}}</h1>
                 </v-col>
             </v-row>
 
@@ -25,7 +25,7 @@
         <v-divider></v-divider>
         <v-container class="spacing-playground">
             <v-row>
-                <v-col>
+                <v-col >
                     <v-text-field 
                         class="mr-4"
                         type="text" 
@@ -39,15 +39,17 @@
                     <v-text-field 
                         type="text" 
                         v-model="text"
-                        label="Text"
+                        label="New Description"
                     >
                     </v-text-field>
                 </v-col>
 
                 
-                <v-btn @click.native="addNew">
-                    Add
-                </v-btn>
+                <v-col cols="1">
+                    <v-btn class="addBtn" tile @click.native="addNew">
+                        <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                </v-col>
             </v-row>
 
             <Task v-for="task in tasks"
@@ -62,6 +64,11 @@
 
 </template>
 
+<style scoped>
+    .addBtn{
+        margin-top: 10px;
+    }
+</style>
 
 <script>
     

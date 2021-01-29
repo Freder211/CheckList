@@ -42,6 +42,22 @@ function updateList(list, oldListName){
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
+function getComplitedTasks(listName){
+    var counter = 0; //array che contiene task completate e quelle totali
+    var lists = getAllLists();
+    for (var i in lists){
+        if(lists[i].name == listName){
+            var tasks = lists[i].tasks;
+            for(var j in tasks){
+                counter += tasks[j].checked;
+            }
+            
+            break;
+        }
+    }
+    return counter;
+}
+
 
 //SELEZIONE LISTA
 function getAllLists(){
@@ -64,6 +80,15 @@ function getSelectedList(){
             return lists[i];
     }
     return -1; //se non ha trovato la list nell'elenco delle liste, allora restituisce -1
+}
+
+function getList(listName){
+    var lists = getAllLists();
+    for (var i in lists){ 
+        if (lists[i].name == listName)
+            return lists[i];
+    }
+    return -1;
 }
 
 
@@ -108,4 +133,6 @@ export default{
     removeList,
     renameList,
     checkTask,
+    getComplitedTasks,
+    getList,
 }

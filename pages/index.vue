@@ -1,21 +1,21 @@
 <template>
         <v-container>
             <v-row>
-                <v-col class="pl-15">
+                <v-col col="11">
 
                     <v-text-field 
                         type="text" 
                         v-model="name"
-                        label="Name"
+                        label="New list"
                         class="ml-15"
+                        hide-details="true"
                     >
                     </v-text-field>
                 </v-col>
 
-                <v-col class="ml-2">
-
-                    <v-btn @click.native="addNew">
-                        Add
+                <v-col cols="1">
+                    <v-btn class="addListBtn mb-2 justify-content-center" @click.native="addNew">
+                        <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
 
@@ -62,6 +62,6 @@
                 this.lists.splice(index, 1);
             },
             
-        }
+        },
     }
 </script>
