@@ -31,7 +31,6 @@
 <script>
     import storageUtils from '~/utils/storage.js';
     export default {
-        //layout: "listLayout",
         data(){
             return {
                 lists: [],

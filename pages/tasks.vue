@@ -1,5 +1,6 @@
 <template>
-    <div id="elements">
+    <div>
+
         <v-container>
             <v-row>
                 <v-col cols="3" sm="2" md="1">
@@ -18,14 +19,16 @@
 
                 <v-col cols="9" sm="10" md="11" align-self="center">
                     <div class="text-h4 text-sm-h3 text-truncate">
-                        {{this.list.name}}
+                        {{this.list.name ? this.list.name : "Error"}}
                     </div>
                 </v-col>
             </v-row>
 
         </v-container> 
         <v-divider></v-divider>
-        <v-container class="spacing-playground">
+        
+
+        <v-container class="spacing-playground" v-if="!this.error">
             <v-row align-content="center" justify="center">
                 <v-col cols="12" sm="5">
                     <v-text-field 
@@ -62,11 +65,24 @@
                 v-on:removed="remove"
             />
         </v-container>
+
+        <v-container v-if="this.error">
+            <v-row class="mt-8">
+                <v-col class="pa-0" align-self="center">
+                    <div class="text-h1 text-center errorText">Couldn't find the list you were looking for :(</div>
+                </v-col>
+                
+            </v-row>
+        </v-container> 
+
     </div>
 
 </template>
 
 <style scoped>
+    .errorText{
+        height: 100%;
+    }
 </style>
 
 <script>
@@ -81,13 +97,16 @@
                 text: "",
                 checked: false,
                 list: "",
+                error: false
             }
         },
 
         mounted(){
             this.list = storageUtils.getSelectedList();
-            if(this.list == -1) //TODO: mostrare errore in caso di -1 
+            if(this.list == -1){ 
+                this.error=true;
                 return;
+            }
 
             var tasks = this.list.tasks;
             tasks.forEach(task => {
