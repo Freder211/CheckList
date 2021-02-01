@@ -10,6 +10,7 @@
                                     v-bind:class="{
                                         listTextField: this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm
                                     }"
+                                    class="font-weight-bold"
                                     ref="textField"
                                     v-model="name"
                                     v-bind:readonly="!this.editing"
