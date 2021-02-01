@@ -14,15 +14,39 @@
                                     </v-col>
 
                                     <v-col class="pa-0" cols="10" sm="4">
-                                        <v-card-title class="pa-0">{{name}}</v-card-title>
+                                        <v-card-title class="pa-0">{{task.name}}</v-card-title>
                                     </v-col>
 
                                     <v-col class="pa-0" cols="12" sm="7">
-                                        <v-card-text class="pa-0" v-show="descriptionEmpty" >{{description}}</v-card-text>
+                                        <v-card-text class="pa-0" v-show="descriptionEmpty" >{{task.text}}</v-card-text>
                                     </v-col>
 
 
                                 </v-row>
+                            </v-container>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="2" lg="1">
+                            <v-container>
+
+                                <v-row v-if="!!this.task.date">
+                                    <v-col class="pa-0" align-self="center">
+                                        <div class="text-subtitle-1 text-center">
+                                            <v-icon>mdi-calendar</v-icon>
+                                            {{this.task.date}}
+                                        </div>
+                                    </v-col>
+                                </v-row>
+
+                                <v-row v-if="!!this.task.time">
+                                    <v-col class="pa-0">
+                                        <div class="text-subtitle-1 text-center">
+                                            <v-icon>mdi-clock</v-icon>
+                                            {{this.task.time}}
+                                        </div>
+                                    </v-col>
+                                </v-row>
+
                             </v-container>
                         </v-col>
 
@@ -70,30 +94,28 @@ export default {
 
     //eseguito al momento della creazione del componente
     mounted(){ 
-        if(this.description == "" || this.description == null)
+        if(this.task.text == "" || this.task.text == null)
             this.descriptionEmpty=false;
     },
 
     props: {
-        name: String,
-        description: String,
-        checked: Boolean,
+        task: {}
     },
 
     computed: {
         checkedReactive: {
             get(){
-                return this.checked;
+                return this.task.checked;
             },
             set(val){
-                storageUtils.checkTask(this.name, val);
+                storageUtils.checkTask(this.task.name, val);
             }
         }
     },
     
     methods: {
         remove(){
-            this.$emit('removed', this.name);
+            this.$emit('removed', this.task.name);
         },
     }
 }

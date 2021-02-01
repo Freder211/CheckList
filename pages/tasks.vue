@@ -34,34 +34,122 @@
                     <v-text-field 
                         class="mr-4"
                         type="text" 
-                        v-model="title"
-                        label="Title"
+                        v-model="task.name"
+                        label="Name*"
                     >
                     </v-text-field>
                 </v-col>
 
-                <v-col cols="12" sm="5" md="6">
+                <v-col cols="12" sm="7">
                     <v-text-field 
                         type="text" 
-                        v-model="text"
-                        label="New Description"
+                        v-model="task.text"
+                        label="Description"
                     >
                     </v-text-field>
                 </v-col>
 
                 
-                <v-col cols="12" sm="2" md="1" align-self="center">
+            </v-row>
+
+            <v-row>
+                <v-col>
+                    <!--Chiedere perché non serve il this, e tutta sta roba del v-slot--> 
+                    <v-menu
+                        ref="dateMenu"
+                        transition="scale-transition"
+                        min-width="auto"
+                        v-model="dateMenu"
+                        :close-on-content-click="false"
+                        :return-value.sync="task.date"
+                        offset-y
+                    >
+
+                        <template v-slot:activator="{on, attrs}">
+                            <v-text-field
+                                label="Pick a dead line date"
+                                prepend-icon="mdi-calendar"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                                v-model="task.date"
+                            >
+                            </v-text-field>
+                        </template>
+
+                        <v-date-picker
+                            v-model="task.date"
+                            no-title
+                            scrollable
+                        >
+                            <v-spacer></v-spacer>
+                            <v-btn text v-on:click="$refs.dateMenu.save(task.date)">
+                                Ok
+                            </v-btn>
+
+                            <v-btn text v-on:click="task.date = null">
+                                Clear
+                            </v-btn>
+                        </v-date-picker>
+                    </v-menu>
+                </v-col>
+
+                <v-col>
+                    <v-menu
+                        ref="timeMenu"
+                        v-model="timeMenu"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="task.time"
+                        transition="scale-transition"
+                        offset-y
+                        max-width="290px"
+                        min-width="290px"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+
+                            <v-text-field
+                                v-model="task.time"
+                                label="Pick a dead link time"
+                                prepend-icon="mdi-clock-time-four-outline"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                            ></v-text-field>
+
+                        </template>
+
+                        <v-time-picker
+                            v-if="timeMenu"
+                            v-model="task.time"
+                            full-width
+                            format="24hr"
+                        >
+                            <v-spacer></v-spacer>
+                            <v-btn text v-on:click="$refs.timeMenu.save(task.time)">
+                                Ok
+                            </v-btn>
+
+                            <v-btn text v-on:click="task.time = ''">
+                                Clear
+                            </v-btn>
+                        </v-time-picker>
+
+                    </v-menu>
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col cols="12" class="px-0" align-self="center">
                     <v-btn class="addBtn" block tile @click.native="addNew">
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
             </v-row>
 
-            <Task v-for="task in tasks"
-                :key="task"
-                :name="task.title"
-                :description="task.text"
-                :checked="task.checked"
+            <Task v-for="t in tasks"
+                :key="t"
+                :task="t"
                 v-on:removed="remove"
             />
         </v-container>
@@ -93,11 +181,20 @@
         data(){
             return {
                 tasks: [],
-                title: "",
-                text: "",
-                checked: false,
+                task: {
+                    name: "",
+                    text: "",
+                    checked: false,
+                    date: null,
+                    time: null,
+                },
+
+                dateMenu: false,
+
+                timeMenu: false,
+
                 list: "",
-                error: false
+                error: false,
             }
         },
 
@@ -108,35 +205,37 @@
                 return;
             }
 
-            var tasks = this.list.tasks;
-            tasks.forEach(task => {
-                this.add(task);
-            });
+            this.tasks  = this.list.tasks;
         },
 
         methods: {
             addNew(){
-                if (this.title != ""){
-                    var newTask = {name: this.title, description: this.text, checked: false};
-                    this.add(newTask);
+                console.log(this.task);
+                console.log(this.task.name);
+                if (this.task.name != ""){
+                    var newTask = {
+                        name: this.task.name,
+                        text: this.task.text,
+                        checked: false,
+                        date: this.task.date,
+                        time: this.task.time
+                    };
+                    this.tasks.push(newTask);
                     storageUtils.addTask(newTask);
-                    this.title="";
-                    this.text="";
+                    this.task.title="";
+                    this.task.text="";
+                    this.task.name="";
+                    this.task.text="";
+                    this.task.date=null;
+                    this.task.time=null
                 }
             },
 
-            add(task){
-                this.tasks.push({
-                    title: task.name,
-                    text: task.description,
-                    checked: task.checked
-                });
-            },
 
             remove(removedTask){
                 storageUtils.removeTask(removedTask);
                 for (var i=0; i<this.tasks.length; i++){
-                    if(this.tasks[i].title==removedTask)
+                    if(this.tasks[i].name==removedTask)
                         this.tasks.splice(i, 1);
                 }
             },
