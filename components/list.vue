@@ -5,7 +5,7 @@
                 <v-container class="fluid">
                     <v-row align="center" justify="center">
                         <v-col cols="12" sm="12" md="8" lg="8">
-                            <div class="textFieldDiv">
+                            <div>
                                 <v-text-field  
                                     v-bind:class="{
                                         listTextField: this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm
@@ -91,9 +91,6 @@
     }
     .listTextField >>> input{
             text-align: center
-    }
-    .textFieldDiv{
-        align-content: center;
     }
 </style>
 

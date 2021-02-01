@@ -1,6 +1,6 @@
 <template>
         <v-container>
-            <v-row>
+            <v-row align="center" align-content="center"  justify="center">
                 <v-col>
 
                     <v-text-field 
@@ -13,12 +13,10 @@
                     </v-text-field>
                 </v-col>
 
-                <v-col md="1" sm="2" cols="3" class="pl-6">
-                    <div class="addListBtn">
-                        <v-btn class=" mb-2 justify-content-center" @click.native="addNew">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
-                    </div>
+                <v-col md="1" sm="2" cols="3" align-self="center">
+                    <v-btn @click.native="addNew">
+                        <v-icon>mdi-plus</v-icon>
+                    </v-btn>
                 </v-col>
 
             </v-row>
@@ -29,10 +27,6 @@
 </template>
 
 <style scoped>
-    .addListBtn {
-        margin-top: 18px;
-        align-content: center;
-    }
 </style>
 
 <script>

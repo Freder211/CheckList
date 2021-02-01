@@ -2,7 +2,7 @@
     <div id="elements">
         <v-container>
             <v-row>
-                <v-col cols="1">
+                <v-col cols="3" sm="2" md="1">
 
                     <v-btn-toggle
                         tile
@@ -16,7 +16,7 @@
 
                 </v-col>
 
-                <v-col cols="11">
+                <v-col cols="9" sm="10" md="11">
                     <h1 class="listName">{{this.list.name}}</h1>
                 </v-col>
             </v-row>
@@ -24,8 +24,8 @@
         </v-container> 
         <v-divider></v-divider>
         <v-container class="spacing-playground">
-            <v-row>
-                <v-col >
+            <v-row align-content="center" justify="center">
+                <v-col cols="12" sm="5">
                     <v-text-field 
                         class="mr-4"
                         type="text" 
@@ -35,7 +35,7 @@
                     </v-text-field>
                 </v-col>
 
-                <v-col>
+                <v-col cols="12" sm="5" md="6">
                     <v-text-field 
                         type="text" 
                         v-model="text"
@@ -45,8 +45,8 @@
                 </v-col>
 
                 
-                <v-col cols="1">
-                    <v-btn class="addBtn" tile @click.native="addNew">
+                <v-col cols="12" sm="2" md="1" align-self="center">
+                    <v-btn class="addBtn" block tile @click.native="addNew">
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
@@ -65,9 +65,6 @@
 </template>
 
 <style scoped>
-    .addBtn{
-        margin-top: 10px;
-    }
 </style>
 
 <script>

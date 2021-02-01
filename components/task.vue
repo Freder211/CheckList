@@ -7,20 +7,18 @@
                         <v-col>
                             <v-container class="fluid">
                                 <v-row align="center" justify="center">
-                                    <v-col cols="2" sm="1">
+                                    <v-col class="pa-0" cols="2" sm="1">
                                         <div class="action">
                                             <v-checkbox  v-model="checkedReactive"></v-checkbox>
                                         </div>
                                     </v-col>
 
-                                    <v-col cols="10" sm="4">
-                                        <div class="taskContent">
-                                            <v-card-title>{{name}}</v-card-title>
-                                        </div>
+                                    <v-col class="pa-0" cols="10" sm="4">
+                                        <v-card-title class="pa-0">{{name}}</v-card-title>
                                     </v-col>
 
-                                    <v-col cols="12" sm="7">
-                                        <v-card-text v-show="descriptionEmpty" >{{description}}</v-card-text>
+                                    <v-col class="pa-0" cols="12" sm="7">
+                                        <v-card-text class="pa-0" v-show="descriptionEmpty" >{{description}}</v-card-text>
                                     </v-col>
 
 
@@ -29,10 +27,11 @@
                         </v-col>
 
 
-                        <v-col cols="2" md="1" align-self="stretch" class="pa-0">
+                        <v-col cols="12" sm="2" md="1" align-self="stretch" class="pa-0">
                                 <v-btn
                                     color="red"
                                     block
+                                    min-height="50"
                                     height="100%"
                                     rounded
                                     tile
