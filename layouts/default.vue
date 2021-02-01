@@ -24,26 +24,34 @@
 </template>
 
 <script>
-  export default{
+    import storageUtils from '~/utils/storage.js'; 
+
+    export default{
     layout: 'listLayout',
     layout(context) {
-     return 'listLayout';
+        return 'listLayout';
     },
 
     data() {
         return {
-            darkMode: false
+            darkMode: false,
         }
+    },
+
+    mounted(){
+        this.darkMode=storageUtils.isDark();
+        this.$vuetify.theme.dark = this.darkMode;
     },
 
     methods: {
         switchMode(){
             this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
             this.darkMode = this.$vuetify.theme.dark;
+            storageUtils.setTheme(this.darkMode);
         },
         goGitHub(){
             window.open("https://github.com/Freder211/CheckList", "_blank");    
         }
     }
-  }
+    }
 </script>

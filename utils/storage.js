@@ -122,6 +122,16 @@ function checkTask(taskName, value){
     updateList(list, list.name);
 }
 
+//THEME
+
+function setTheme(dark){
+    localStorage.setItem('dark', dark);    
+}
+
+function isDark(){
+    return localStorage.getItem('dark')=='true';
+}
+
 export default{
     getAllLists,
     newList,
@@ -135,4 +145,6 @@ export default{
     checkTask,
     getComplitedTasks,
     getList,
+    setTheme,
+    isDark
 }

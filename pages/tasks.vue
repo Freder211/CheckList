@@ -16,8 +16,10 @@
 
                 </v-col>
 
-                <v-col cols="9" sm="10" md="11">
-                    <h1 class="listName">{{this.list.name}}</h1>
+                <v-col cols="9" sm="10" md="11" align-self="center">
+                    <div class="text-h4 text-sm-h3 text-truncate">
+                        {{this.list.name}}
+                    </div>
                 </v-col>
             </v-row>
 

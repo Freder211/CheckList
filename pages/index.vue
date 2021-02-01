@@ -1,20 +1,19 @@
 <template>
         <v-container>
-            <v-row align="center" align-content="center"  justify="center">
+            <v-row align-content="center"  justify="center">
                 <v-col>
 
                     <v-text-field 
                         type="text" 
                         v-model="name"
                         label="New list"
-                        class="ml-0"
                         hide-details="true"
                     >
                     </v-text-field>
                 </v-col>
 
                 <v-col md="1" sm="2" cols="3" align-self="center">
-                    <v-btn @click.native="addNew">
+                    <v-btn class="addBtn" block tile @click.native="addNew">
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
