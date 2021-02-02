@@ -33,18 +33,21 @@
                     <v-col class="pa-0" align-self="center">
                       <div
                         class="text-subtitle-1 text-center"
-                        v-bind:class="this.expireDate < new Date()? 'red--text' : ''"
+                        v-bind:class="{'red--text':this.isExpired}"
                       >
-                        <v-icon>mdi-calendar</v-icon>
-                        {{ this.task.date }}
+                        <v-icon :color="this.isExpired ? 'red' : 'default'">mdi-calendar</v-icon>
+                        {{this.smartDate}}
                       </div>
                     </v-col>
                   </v-row>
 
                   <v-row v-if="!!this.task.time">
                     <v-col class="pa-0">
-                      <div class="text-subtitle-1 text-center">
-                        <v-icon>mdi-clock</v-icon>
+                      <div
+                        class="text-subtitle-1 text-center"
+                        v-bind:class="{'red--text':this.isExpired}"
+                      >
+                        <v-icon :color="this.isExpired ? 'red' : 'default'">mdi-clock</v-icon>
                         {{ this.task.time }}
                       </div>
                     </v-col>
@@ -83,24 +86,32 @@
 
 <script>
 import storageUtils from "~/utils/storage.js";
-import timeUtils from "~/utils/time.js";
 
 export default {
   data() {
     return {
       descriptionEmpty: true,
       expireDate: null,
+      isExpired: false,
+      now: new Date(),
+      smartDate: null,
     };
   },
 
   //eseguito al momento della creazione del componente
   mounted() {
-    console.log(this.id);
     if (this.task.text == "" || this.task.text == null)
       this.descriptionEmpty = false;
 
-    console.log(this.task.name);
     this.expireDate=this.date();
+    this.smartDate=this.task.date;
+    this.checkExpired();
+    this.checkSmartDate();
+
+    window.setInterval(() => {
+        this.checkExpired();
+        this.checkSmartDate();
+    }, 10000);
   },
 
   props: {
@@ -124,19 +135,48 @@ export default {
       this.$emit("removed", this.id);
     },
 
-    checkExpired(){//TODO
+    checkExpired(){
+      this.now = new Date();
+      if(this.expireDate > this.now)
+        this.isExpired=false;
+      else
+        this.isExpired=true;
+    },
+
+    checkSmartDate(){
+      if(!this.task.date)
+        return;
+      var daysDiff = this.expireDate.getDate() - this.now.getDate();
+      if(
+        this.now.getFullYear() == this.expireDate.getFullYear() &&
+        this.now.getMonth() == this.expireDate.getMonth() &&
+        Math.abs(daysDiff) < 7
+      )
+      {
+        if(daysDiff==0)
+          this.smartDate="Today"
+        else if (daysDiff==1)
+          this.smartDate="Tomorrow"
+        else if (daysDiff==-1)
+          this.smartDate="Yesterday"
+        else{
+          var week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+          this.smartDate=week[this.expireDate.getDay()];
+        }
+      }
+      else
+        this.smartDate=this.task.date;
     },
 
 
     date() {
-      var completeDate;
       if (this.task.date==null && this.task.time==null)
         return;
 
+      var completeDate;
       var year, month, day;
       if(!!this.task.date){
         var date=this.task.date.split("-");
-        console.log(date);
         year=parseInt(date[0]);
         month=parseInt(date[1]-1);
         day=parseInt(date[2]);
@@ -144,7 +184,7 @@ export default {
       else{
         year = new Date().getFullYear();
         month = new Date().getMonth();
-        day = new Date().getDay();
+        day = new Date().getDate();
       }
       
       var hour, minute;
@@ -158,7 +198,6 @@ export default {
         completeDate = new Date(year, month, day);
       }
 
-      console.log(new Date() + "---" + completeDate);
       return completeDate; 
     },
   },
