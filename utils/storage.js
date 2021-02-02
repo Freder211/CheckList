@@ -100,25 +100,15 @@ function addTask(task){
     updateList(list, list.name);
 }
 
-function removeTask(taskName){
+function removeTask(index){
     var list = getSelectedList();
-    for (var i in list.tasks){
-        if(list.tasks[i].name == taskName){
-            list.tasks.splice(i, 1);
-            break;
-        }
-    }
+    list.tasks.splice(index, 1);
     updateList(list, list.name);
 }
 
-function checkTask(taskName, value){
+function checkTask(index, value){
     var list = getSelectedList();
-    for (var i in list.tasks){
-        if(list.tasks[i].name == taskName){
-            list.tasks[i].checked=value;
-            break;
-        }
-    }
+    list.tasks[index].checked=value;
     updateList(list, list.name);
 }
 

@@ -48,7 +48,7 @@
         methods: {
             addNew(){
                 if (this.name != ""){
-                    var list = {name: this.name, tasks: []}
+                    var list = {name: this.name, tasks: []};
                     storageUtils.newList(list);
                     this.add(list.name);
                     this.name="";

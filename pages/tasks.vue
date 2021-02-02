@@ -147,9 +147,10 @@
                 </v-col>
             </v-row>
 
-            <Task v-for="t in tasks"
-                :key="t"
+            <Task v-for="(t, index) in tasks"
+                :key="index"
                 :task="t"
+                :id="index"
                 v-on:removed="remove"
             />
         </v-container>
@@ -199,19 +200,22 @@
         },
 
         mounted(){
-            this.list = storageUtils.getSelectedList();
-            if(this.list == -1){ 
-                this.error=true;
-                return;
-            }
-
-            this.tasks  = this.list.tasks;
+            this.updateList();
         },
 
         methods: {
+
+            updateList(){
+                this.list = storageUtils.getSelectedList();
+                if(this.list == -1){ 
+                    this.error=true;
+                    return;
+            }
+
+            this.tasks  = this.list.tasks;
+            },
+
             addNew(){
-                console.log(this.task);
-                console.log(this.task.name);
                 if (this.task.name != ""){
                     var newTask = {
                         name: this.task.name,
@@ -222,6 +226,7 @@
                     };
                     this.tasks.push(newTask);
                     storageUtils.addTask(newTask);
+
                     this.task.title="";
                     this.task.text="";
                     this.task.name="";
@@ -232,12 +237,9 @@
             },
 
 
-            remove(removedTask){
-                storageUtils.removeTask(removedTask);
-                for (var i=0; i<this.tasks.length; i++){
-                    if(this.tasks[i].name==removedTask)
-                        this.tasks.splice(i, 1);
-                }
+            remove(index){
+                storageUtils.removeTask(index);
+                this.updateList();
             },
 
 

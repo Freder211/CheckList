@@ -110,7 +110,7 @@
         mounted(){
             this.totalTasks = storageUtils.getList(this.name).tasks.length;
             this.completedTasks = storageUtils.getComplitedTasks(this.name);
-            this.percentage = this.completedTasks*100/this.totalTasks
+            this.percentage = this.completedTasks*100/this.totalTasks;
         },
 
         props: {
