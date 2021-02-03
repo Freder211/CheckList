@@ -20,17 +20,40 @@
 
             </v-row>
 
-            <List v-for="list in lists" :key="list" :name="list" v-on:removed="remove"/>
+            <transition-group name="lists" tag="div">
+                <List v-for="list in lists" :key="list" :name="list" v-on:removed="remove"/>
+            </transition-group>
         </v-container>
 
 </template>
 
 <style scoped>
+    .lists-enter,
+    .lists-leave-to {
+      opacity: 0;
+    }
+
+    .lists-enter {
+      transform: translateY(30%);
+    }
+
+    .lists-leave-to {
+      transform: translateX(300%);
+    }
+
+    .lists-leave-active {
+      position: absolute;
+    }
+
+    .lists-transition-enter-active, .lists-transition-leave-active { transition: opacity .5s; }
+    .lists-transition-enter, .lists-transition-leave-active { opacity: 0; }
 </style>
 
 <script>
     import storageUtils from '~/utils/storage.js';
     export default {
+        transition: 'lists-transition',
+
         data(){
             return {
                 lists: [],

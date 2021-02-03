@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col>
+
+    <div class="mt-4 list">
             <v-card>
                 <v-container class="fluid">
                     <v-row align="center" justify="center">
@@ -80,9 +80,7 @@
                 </v-container>
 
             </v-card>
-        </v-col>
-    </v-row>
-
+    </div>
 </template>
 
 <style scoped>
@@ -92,6 +90,11 @@
     }
     .listTextField >>> input{
             text-align: center
+    }
+    .list{
+        width: 100%;
+        transition: all 1s;
+        display: inline-block;
     }
 </style>
 

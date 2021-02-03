@@ -1,6 +1,6 @@
 <template>
-  <v-slide-y-transition>
-      <v-card v-show="this.show">
+  <div class="card">
+      <v-card>
         <v-container>
           <v-row align="center">
             <v-col>
@@ -71,7 +71,7 @@
           </v-row>
         </v-container>
       </v-card>
-  </v-slide-y-transition>
+  </div>
 </template>
 
 <style scoped>
@@ -79,6 +79,12 @@
   text-align: center;
   align-items: center;
   align-self: stretch;
+}
+
+.card{
+  width: 100%;
+  transition: all 1s;
+  display: inline-block;
 }
 </style>
 

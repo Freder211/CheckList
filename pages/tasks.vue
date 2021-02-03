@@ -54,7 +54,6 @@
 
             <v-row>
                 <v-col cols="12" sm="6">
-                    <!--Chiedere perché non serve il this, e tutta sta roba del v-slot--> 
                     <v-menu
                         ref="dateMenu"
                         transition="scale-transition"
@@ -147,12 +146,14 @@
                 </v-col>
             </v-row>
 
-            <Task v-for="t in tasks.slice().reverse()"
-                :key="t.id"
-                :task="t"
-                v-on:removed="remove"
-                class="mt-3"
-            />
+            <transition-group name="list" tag="div">
+                <Task v-for="t in tasks.slice().reverse()"
+                    :key="t.id"
+                    :task="t"
+                    v-on:removed="remove"
+                    class="mt-3 task"
+                />
+            </transition-group>
         </v-container>
 
         <v-container v-if="this.error">
@@ -172,6 +173,27 @@
     .errorText{
         height: 100%;
     }
+
+    .list-enter,
+    .list-leave-to {
+      opacity: 0;
+    }
+
+    .list-enter {
+      transform: translateY(30%);
+    }
+
+    .list-leave-to {
+      transform: translateX(300%);
+    }
+
+    .list-leave-active {
+      position: absolute;
+    }
+
+
+    .tasks-transition-enter-active, .tasks-transition-leave-active { transition: opacity .5s; }
+    .tasks-transition-enter, .tasks-transition-leave-active { opacity: 0; }
 </style>
 
 <script>
@@ -180,6 +202,9 @@
     import { v4 as uuidv4} from 'uuid';
 
     export default {
+
+        transition: 'tasks-transition',
+
         data(){
             return {
                 tasks: [],
@@ -248,6 +273,7 @@
             back(){
                 this.$router.push({name: 'index'});
             }
-        }
+        },
     }
+
 </script>
