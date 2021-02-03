@@ -1,7 +1,6 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card>
+  <v-slide-y-transition>
+      <v-card v-show="this.show">
         <v-container>
           <v-row align="center">
             <v-col>
@@ -72,8 +71,7 @@
           </v-row>
         </v-container>
       </v-card>
-    </v-col>
-  </v-row>
+  </v-slide-y-transition>
 </template>
 
 <style scoped>
@@ -95,11 +93,14 @@ export default {
       isExpired: false,
       now: new Date(),
       smartDate: null,
+
+      show: false,
     };
   },
 
   //eseguito al momento della creazione del componente
   mounted() {
+    this.show=true;
     if (this.task.text == "" || this.task.text == null)
       this.descriptionEmpty = false;
 
@@ -116,7 +117,6 @@ export default {
 
   props: {
     task: {},
-    id: Number,
   },
 
   computed: {
@@ -125,14 +125,15 @@ export default {
         return this.task.checked;
       },
       set(val) {
-        storageUtils.checkTask(this.id, val);//metti ID
+        storageUtils.checkTask(this.task.id, val);//metti ID
       },
     },
   },
 
   methods: {
     remove() {
-      this.$emit("removed", this.id);
+      this.show=false;
+      this.$emit("removed", this.task.id);
     },
 
     checkExpired(){

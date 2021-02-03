@@ -53,7 +53,7 @@
             </v-row>
 
             <v-row>
-                <v-col>
+                <v-col cols="12" sm="6">
                     <!--Chiedere perché non serve il this, e tutta sta roba del v-slot--> 
                     <v-menu
                         ref="dateMenu"
@@ -147,11 +147,11 @@
                 </v-col>
             </v-row>
 
-            <Task v-for="(t, index) in tasks"
-                :key="index"
+            <Task v-for="t in tasks.slice().reverse()"
+                :key="t.id"
                 :task="t"
-                :id="index"
                 v-on:removed="remove"
+                class="mt-3"
             />
         </v-container>
 
@@ -177,6 +177,7 @@
 <script>
     
     import storageUtils from '~/utils/storage.js';
+    import { v4 as uuidv4} from 'uuid';
 
     export default {
         data(){
@@ -210,14 +211,15 @@
                 if(this.list == -1){ 
                     this.error=true;
                     return;
-            }
+                }
 
-            this.tasks  = this.list.tasks;
+                this.tasks  = this.list.tasks;
             },
 
             addNew(){
                 if (this.task.name != ""){
                     var newTask = {
+                        id: uuidv4(),
                         name: this.task.name,
                         text: this.task.text,
                         checked: false,
@@ -237,8 +239,8 @@
             },
 
 
-            remove(index){
-                storageUtils.removeTask(index);
+            remove(id){
+                storageUtils.removeTask(id);
                 this.updateList();
             },
 
