@@ -10,10 +10,10 @@ function newList(list){
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
-function removeList(listName){
+function removeList(id){
     var lists = JSON.parse(localStorage.getItem('lists'));
     for (var i in lists){
-        if(lists[i].name == listName){
+        if(lists[i].id == id){
             lists.splice(i, 1);
             break;
         }
@@ -21,10 +21,10 @@ function removeList(listName){
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
-function renameList(oldName, newName){
+function renameList(id, newName){
     var lists = JSON.parse(localStorage.lists);
     for (var i in lists){
-        if(lists[i].name == oldName){
+        if(lists[i].id == id){
             lists[i].name = newName;
             break;
         }
@@ -32,21 +32,21 @@ function renameList(oldName, newName){
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
-function updateList(list, oldListName){
+function updateList(list, id){
     var lists = JSON.parse(localStorage.lists);
     for (var i in lists){
-        if(lists[i].name == oldListName){
+        if(lists[i].id == id){
             lists[i] = list;
         }
     }
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
-function getComplitedTasks(listName){
+function getComplitedTasks(id){
     var counter = 0; //array che contiene task completate e quelle totali
     var lists = getAllLists();
     for (var i in lists){
-        if(lists[i].name == listName){
+        if(lists[i].id == id){
             var tasks = lists[i].tasks;
             for(var j in tasks){
                 counter += tasks[j].checked;
@@ -82,10 +82,10 @@ function getSelectedList(){
     return -1; //se non ha trovato la list nell'elenco delle liste, allora restituisce -1
 }
 
-function getList(listName){
+function getList(id){
     var lists = getAllLists();
     for (var i in lists){ 
-        if (lists[i].name == listName)
+        if (lists[i].id == id)
             return lists[i];
     }
     return -1;
@@ -97,7 +97,7 @@ function getList(listName){
 function addTask(task){
     var list = getSelectedList();
     list.tasks.push(task);
-    updateList(list, list.name);
+    updateList(list, list.id);
 }
 
 function removeTask(id){
@@ -108,7 +108,7 @@ function removeTask(id){
             break;
         }
     }
-    updateList(list, list.name);
+    updateList(list, list.id);
 }
 
 function checkTask(id, value){
@@ -119,7 +119,7 @@ function checkTask(id, value){
             break;
         }
     }
-    updateList(list, list.name);
+    updateList(list, list.id);
 }
 
 //THEME

@@ -111,25 +111,25 @@
         },
 
         mounted(){
-            this.totalTasks = storageUtils.getList(this.name).tasks.length;
-            this.completedTasks = storageUtils.getComplitedTasks(this.name);
+            this.totalTasks = storageUtils.getList(this.id).tasks.length;
+            this.completedTasks = storageUtils.getComplitedTasks(this.id);
             this.percentage = this.completedTasks*100/this.totalTasks;
         },
 
         props: {
-            name: String
+            name: String,
+            id: String
         },    
         methods: {
             remove(){
-                this.$emit('removed', this.name);
+                this.$emit('removed', this.id);
             },
             edit(){
                 if(!this.editing){ //inizio editing
-                    this.edit.oldName = this.name; // memorizzo il nome della lista in una variabile statica prima che venga modificato
                     this.$refs.textField.focus();
                 }
                 else if(this.edit.oldName!=this.name){ //editing terminato
-                    storageUtils.renameList(this.edit.oldName, this.name);
+                    storageUtils.renameList(this.id, this.name);
                 }
                 this.editing = !this.editing;
             },

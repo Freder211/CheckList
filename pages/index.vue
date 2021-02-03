@@ -21,7 +21,7 @@
             </v-row>
 
             <transition-group name="lists" tag="div">
-                <List v-for="list in lists" :key="list" :name="list" v-on:removed="remove"/>
+                <List v-for="l in lists" :key="l.id" :name="l.name" :id="l.id" v-on:removed="remove"/>
             </transition-group>
         </v-container>
 
@@ -51,6 +51,8 @@
 
 <script>
     import storageUtils from '~/utils/storage.js';
+    import { v4 as uuidv4} from 'uuid';
+
     export default {
         transition: 'lists-transition',
 
@@ -64,26 +66,26 @@
         mounted(){
             var lists = storageUtils.getAllLists();
             for(var i in lists){
-                this.add(lists[i].name);
+                this.lists.push(lists[i]);
             }
         },
         
         methods: {
             addNew(){
                 if (this.name != ""){
-                    var list = {name: this.name, tasks: []};
+                    var list = {id: uuidv4(), name: this.name, tasks: []};
                     storageUtils.newList(list);
-                    this.add(list.name);
+                    this.lists.push(list);
                     this.name="";
                 }
             },
-            add(listName){
-                this.lists.push(listName);
-            },
-            remove(removedList){
-                storageUtils.removeList(removedList);
-                var index = this.lists.indexOf(removedList);
-                this.lists.splice(index, 1);
+            remove(id){
+                storageUtils.removeList(id);
+                for(var i in this.lists){
+                    if(this.lists[i].id == id){
+                        this.lists.splice(i, 1);
+                    }
+                }
             },
             
         },
