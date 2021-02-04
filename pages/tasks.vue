@@ -266,7 +266,11 @@
 
             remove(id){
                 storageUtils.removeTask(id);
-                this.updateList();
+                for(var i in this.tasks){
+                    if(this.tasks[i].id == id){
+                        this.tasks.splice(i, 1);
+                    }
+                }
             },
 
 
