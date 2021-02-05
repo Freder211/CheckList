@@ -139,19 +139,51 @@
             </v-row>
 
             <v-row>
-                <v-col cols="12" class="px-0" align-self="center">
+                <v-col cols="10" class="px-0" align-self="center">
                     <v-btn class="addBtn" block tile @click.native="addNew">
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
+
+                <v-col  cols="2" class="px-0 pl-sm-3" align-self="center">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+
+                            <v-btn
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                Order by
+                            </v-btn>
+
+                        </template>
+
+                        <v-list>
+                            <v-list-item
+                                class="pa-0"
+                                v-for="o in orders"
+                                :key="o"
+                            >
+                                <v-btn
+                                    block
+                                    tile
+                                    text
+                                    @click.native="order(o)"
+                                >{{o}}</v-btn>
+                            </v-list-item>
+                        </v-list>
+
+                    </v-menu>
+                </v-col>
             </v-row>
 
             <transition-group name="list" tag="div">
-                <Task v-for="t in tasks.slice().reverse()"
+                <Task v-for="t in tasks"
                     :key="t.id"
                     :task="t"
                     v-on:removed="remove"
                     class="mt-3 task"
+                    :ref="t.id"
                 />
             </transition-group>
         </v-container>
@@ -222,6 +254,11 @@
 
                 list: "",
                 error: false,
+
+                orders: [
+                    'Name',
+                    'Deadline'
+                ]
             }
         },
 
@@ -251,7 +288,7 @@
                         date: this.task.date,
                         time: this.task.time
                     };
-                    this.tasks.push(newTask);
+                    this.tasks.unshift(newTask);
                     storageUtils.addTask(newTask);
 
                     this.task.title="";
@@ -270,6 +307,32 @@
                     if(this.tasks[i].id == id){
                         this.tasks.splice(i, 1);
                     }
+                }
+            },
+
+            order(type){
+                if(type==this.orders[0]){
+                    function compare(a, b){
+                        if(a.name < b.name)
+                            return -1;
+                        if(a.name > b.name)
+                            return 1;
+
+                        return 0;
+                    }
+
+                    this.tasks.sort(compare);
+                }
+                else if (type==this.orders[1]){
+                        console.log('ciao');
+                    function compare(a, b){
+                        if($(a.id).date < $(b.id).date)
+                            return -1;
+                        if($(a.id).date > $(b.id).date)
+                            return 1;
+                        return 0;
+                    }
+                    this.tasks.sort(compare);
                 }
             },
 

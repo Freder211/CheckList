@@ -96,7 +96,7 @@ function getList(id){
 
 function addTask(task){
     var list = getSelectedList();
-    list.tasks.push(task);
+    list.tasks.unshift(task);
     updateList(list, list.id);
 }
 
