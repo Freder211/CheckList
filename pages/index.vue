@@ -73,7 +73,7 @@
         methods: {
             addNew(){
                 if (this.name != ""){
-                    var list = {id: uuidv4(), name: this.name, tasks: []};
+                    var list = {id: uuidv4(), name: this.name, tasks: [], order: 0};
                     storageUtils.newList(list);
                     this.lists.push(list);
                     this.name="";

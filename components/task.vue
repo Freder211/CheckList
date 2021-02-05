@@ -178,7 +178,7 @@ export default {
 
     date() {
       if (this.task.date==null && this.task.time==null)
-        return;
+        return 0;
 
       var completeDate;
       var year, month, day;

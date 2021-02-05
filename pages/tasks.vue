@@ -138,22 +138,27 @@
                 </v-col>
             </v-row>
 
-            <v-row>
-                <v-col cols="10" class="px-0" align-self="center">
+            <v-row justify="center" align="center" align-content="center">
+                <v-col class="px-0" align-self="center">
                     <v-btn class="addBtn" block tile @click.native="addNew">
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
 
-                <v-col  cols="2" class="px-0 pl-sm-3" align-self="center">
+                <v-col  cols="6" sm="4" class="pr-0" align-self="right">
                     <v-menu offset-y>
                         <template v-slot:activator="{ on, attrs }">
 
+
                             <v-btn
+                                class="px-0"
+                                block
                                 v-bind="attrs"
                                 v-on="on"
                             >
-                                Order by
+                                <v-icon>mdi-order-bool-descending</v-icon>
+                                Order by:
+                                {{orders[selectedOrder]}}
                             </v-btn>
 
                         </template>
@@ -257,13 +262,16 @@
 
                 orders: [
                     'Name',
-                    'Deadline'
-                ]
+                    'Time'
+                ],
+                selectedOrder: 0,
             }
         },
 
         mounted(){
             this.updateList();
+            this.order();
+            this.selectedOrder = this.list.order;
         },
 
         methods: {
@@ -278,6 +286,10 @@
                 this.tasks  = this.list.tasks;
             },
 
+            pushList(){
+                storageUtils.updateList(this.list, this.list.id);
+            },
+
             addNew(){
                 if (this.task.name != ""){
                     var newTask = {
@@ -289,6 +301,7 @@
                         time: this.task.time
                     };
                     this.tasks.unshift(newTask);
+                    this.order(this.selectedOrder);
                     storageUtils.addTask(newTask);
 
                     this.task.title="";
@@ -311,8 +324,11 @@
             },
 
             order(type){
+                this.selectedOrder=this.orders.indexOf(type);
+                this.list.order=this.selectedOrder;
+                var compare=null;
                 if(type==this.orders[0]){
-                    function compare(a, b){
+                    compare =  function(a, b){
                         if(a.name < b.name)
                             return -1;
                         if(a.name > b.name)
@@ -320,20 +336,30 @@
 
                         return 0;
                     }
-
-                    this.tasks.sort(compare);
                 }
                 else if (type==this.orders[1]){
-                        console.log('ciao');
-                    function compare(a, b){
-                        if($(a.id).date < $(b.id).date)
+                    var refs= this.$refs;
+                    
+                    compare = function(a, b){
+                        var d1 = refs[a.id][0].date();
+                        var d2 = refs[b.id][0].date();
+                        if(d1==0 && d2!=0)
+                            return 1;
+                        if(d2==0 && d1!=0)
                             return -1;
-                        if($(a.id).date > $(b.id).date)
+                        if(d1 < d2)
+                            return -1;
+                        if(d1 > d2)
                             return 1;
                         return 0;
                     }
-                    this.tasks.sort(compare);
                 }
+                
+                if(compare!=null){
+                    this.tasks.sort(compare);
+                    this.pushList();
+                }
+                
             },
 
 
