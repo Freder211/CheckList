@@ -271,13 +271,15 @@
         mounted(){
             this.updateList();
             this.order();
-            this.selectedOrder = this.list.order;
+            this.selectedOrder = storageUtils.getSelectedList().order;
         },
 
         methods: {
 
             updateList(){
                 this.list = storageUtils.getSelectedList();
+                //console.log(storageUtils.getSelectedList());
+                //console.log(this.list);????
                 if(this.list == -1){ 
                     this.error=true;
                     return;

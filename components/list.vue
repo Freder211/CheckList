@@ -134,7 +134,7 @@
                 this.editing = !this.editing;
             },
             show(){
-                storageUtils.setList(this.name); 
+                storageUtils.setList(this.id); 
                 this.$router.push({name: 'tasks'});
             }
 

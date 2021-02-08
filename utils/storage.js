@@ -64,8 +64,8 @@ function getAllLists(){
     return JSON.parse(localStorage.getItem('lists'));
 }
 
-function setList(listName){
-    localStorage.setItem('selectedList', listName);
+function setList(id){
+    localStorage.setItem('selectedList', id);
 }
 
 function getSelectedList(){
@@ -76,8 +76,9 @@ function getSelectedList(){
 
     var lists = JSON.parse(localStorage.lists);
     for (var i in lists){ //cerca nelle liste quella selezionata e la restituisce
-        if (lists[i].name == selectedList)
+        if (lists[i].id == selectedList){
             return lists[i];
+        }
     }
     return -1; //se non ha trovato la list nell'elenco delle liste, allora restituisce -1
 }
