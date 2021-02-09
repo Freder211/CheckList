@@ -40,6 +40,7 @@
         mounted(){
             this.darkMode=storageUtils.isDark();
             this.$vuetify.theme.dark = this.darkMode;
+            this.askNotificationsPerms();
         },
 
         methods: {
@@ -50,6 +51,13 @@
             },
             goGitHub(){
                 window.open("https://github.com/Freder211/CheckList", "_blank");    
+            },
+            askNotificationsPerms(){
+
+                if('Notification' in window){
+                       Notification.requestPermission().then();
+                }
+
             }
         }
     }

@@ -1,30 +1,43 @@
-if(localStorage.getItem('lists') == undefined){
+if (localStorage.getItem('lists') == undefined) {
     localStorage.setItem('lists', JSON.stringify([]));
     localStorage.removeItem('selectedList');
 }
+updateSW();
+
+//SERVICE WORKER
+function updateSW(){
+    var lists = getAllLists();
+    navigator.serviceWorker.ready.then(
+        worker => worker.active.postMessage({
+            type: 'update_lists',
+            lists: lists
+        })
+    )
+}
 
 //MODIFICA LISTE
-function newList(list){
+function newList(list) {
     var lists = JSON.parse(localStorage.getItem('lists'));
     lists.push(list);
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
-function removeList(id){
+function removeList(id) {
     var lists = JSON.parse(localStorage.getItem('lists'));
-    for (var i in lists){
-        if(lists[i].id == id){
+    for (var i in lists) {
+        if (lists[i].id == id) {
             lists.splice(i, 1);
             break;
         }
     }
     localStorage.setItem('lists', JSON.stringify(lists));
+    updateSW();
 }
 
-function renameList(id, newName){
+function renameList(id, newName) {
     var lists = JSON.parse(localStorage.lists);
-    for (var i in lists){
-        if(lists[i].id == id){
+    for (var i in lists) {
+        if (lists[i].id == id) {
             lists[i].name = newName;
             break;
         }
@@ -32,26 +45,27 @@ function renameList(id, newName){
     localStorage.setItem('lists', JSON.stringify(lists));
 }
 
-function updateList(list, id){
+function updateList(list, id) {
     var lists = JSON.parse(localStorage.lists);
-    for (var i in lists){
-        if(lists[i].id == id){
+    for (var i in lists) {
+        if (lists[i].id == id) {
             lists[i] = list;
         }
     }
     localStorage.setItem('lists', JSON.stringify(lists));
+    updateSW();
 }
 
-function getComplitedTasks(id){
+function getComplitedTasks(id) {
     var counter = 0; //array che contiene task completate e quelle totali
     var lists = getAllLists();
-    for (var i in lists){
-        if(lists[i].id == id){
+    for (var i in lists) {
+        if (lists[i].id == id) {
             var tasks = lists[i].tasks;
-            for(var j in tasks){
+            for (var j in tasks) {
                 counter += tasks[j].checked;
             }
-            
+
             break;
         }
     }
@@ -60,32 +74,32 @@ function getComplitedTasks(id){
 
 
 //SELEZIONE LISTA
-function getAllLists(){
+function getAllLists() {
     return JSON.parse(localStorage.getItem('lists'));
 }
 
-function setList(id){
+function setList(id) {
     localStorage.setItem('selectedList', id);
 }
 
-function getSelectedList(){
+function getSelectedList() {
     var selectedList = localStorage.getItem('selectedList');
 
-    if(selectedList==null) //se non esiste una lista selezionata restituisce -1
+    if (selectedList == null) //se non esiste una lista selezionata restituisce -1
         return -1;
 
     var lists = JSON.parse(localStorage.lists);
-    for (var i in lists){ //cerca nelle liste quella selezionata e la restituisce
-        if (lists[i].id == selectedList){
+    for (var i in lists) { //cerca nelle liste quella selezionata e la restituisce
+        if (lists[i].id == selectedList) {
             return lists[i];
         }
     }
     return -1; //se non ha trovato la list nell'elenco delle liste, allora restituisce -1
 }
 
-function getList(id){
+function getList(id) {
     var lists = getAllLists();
-    for (var i in lists){ 
+    for (var i in lists) {
         if (lists[i].id == id)
             return lists[i];
     }
@@ -95,28 +109,28 @@ function getList(id){
 
 //TASKS
 
-function addTask(task){
+function addTask(task) {
     var list = getSelectedList();
     list.tasks.unshift(task);
     updateList(list, list.id);
 }
 
-function removeTask(id){
+function removeTask(id) {
     var list = getSelectedList();
-    for (var i in list.tasks){
-        if(list.tasks[i].id==id){
-            list.tasks.splice(i,1);
+    for (var i in list.tasks) {
+        if (list.tasks[i].id == id) {
+            list.tasks.splice(i, 1);
             break;
         }
     }
     updateList(list, list.id);
 }
 
-function checkTask(id, value){
+function checkTask(id, value) {
     var list = getSelectedList();
-    for (var i in list.tasks){
-        if(list.tasks[i].id==id){
-            list.tasks[i].checked=value;
+    for (var i in list.tasks) {
+        if (list.tasks[i].id == id) {
+            list.tasks[i].checked = value;
             break;
         }
     }
@@ -125,15 +139,15 @@ function checkTask(id, value){
 
 //THEME
 
-function setTheme(dark){
-    localStorage.setItem('dark', dark);    
+function setTheme(dark) {
+    localStorage.setItem('dark', dark);
 }
 
-function isDark(){
-    return localStorage.getItem('dark')=='true';
+function isDark() {
+    return localStorage.getItem('dark') == 'true';
 }
 
-export default{
+export default {
     getAllLists,
     newList,
     addTask,
@@ -147,5 +161,6 @@ export default{
     getComplitedTasks,
     getList,
     setTheme,
-    isDark
+    isDark,
+    updateSW,
 }
