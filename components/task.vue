@@ -13,11 +13,16 @@
                   </v-col>
 
                   <v-col class="pa-0" cols="10" sm="4">
-                    <v-card-title class="pa-0">{{ task.name }}</v-card-title>
+                    <v-card-title
+                      class="pa-0"
+                      v-bind:class="this.textCssClass()"
+                    >
+                      {{ task.name }}
+                    </v-card-title>
                   </v-col>
 
                   <v-col class="pa-0" cols="12" sm="7">
-                    <v-card-text class="pa-0" v-show="descriptionEmpty">
+                    <v-card-text class="pa-0" v-show="descriptionEmpty" v-bind:class="this.textCssClass()">
                       {{task.text}}
                     </v-card-text>
                   </v-col>
@@ -32,9 +37,13 @@
                     <v-col class="pa-0" align-self="center">
                       <div
                         class="text-subtitle-1 text-center"
-                        v-bind:class="{'red--text':this.isExpired}"
+                        v-bind:class="this.textCssClass()"
                       >
-                        <v-icon :color="this.isExpired ? 'red' : 'default'">mdi-calendar</v-icon>
+                        <v-icon
+                          :color="this.isExpired && !this.checked ? 'red' : 'default'"
+                        >
+                            mdi-calendar
+                        </v-icon>
                         {{this.smartDate}}
                       </div>
                     </v-col>
@@ -44,9 +53,13 @@
                     <v-col class="pa-0">
                       <div
                         class="text-subtitle-1 text-center"
-                        v-bind:class="{'red--text':this.isExpired}"
+                        v-bind:class="this.textCssClass()"
                       >
-                        <v-icon :color="this.isExpired ? 'red' : 'default'">mdi-clock</v-icon>
+                        <v-icon
+                          :color="this.isExpired && !this.checked ? 'red' : 'default'"
+                        >
+                          mdi-clock
+                        </v-icon>
                         {{ this.task.time }}
                       </div>
                     </v-col>
@@ -101,6 +114,7 @@ export default {
       smartDate: null,
 
       show: false,
+      checked: this.task.checked,
     };
   },
 
@@ -131,12 +145,25 @@ export default {
         return this.task.checked;
       },
       set(val) {
-        storageUtils.checkTask(this.task.id, val);//metti ID
+        storageUtils.checkTask(this.task.id, val);
+        this.checked = val;
       },
     },
   },
 
   methods: {
+    textCssClass(){
+      var css = {
+        'red--text':this.isExpired,
+      };
+      if(this.checked)
+        css = {
+          'text-decoration-line-through': this.checked,
+          'text--disabled': true
+        }
+      return css;
+    },
+
     remove() {
       this.show=false;
       this.$emit("removed", this.task.id);
