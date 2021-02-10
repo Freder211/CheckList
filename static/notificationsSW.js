@@ -6,7 +6,6 @@ var tasks=[];
 
 self.addEventListener('message', ({ data })=>{
     if (data && data.type === "new_task" ) {
-        console.log(data.task);
         tasks.push({
             id: data.task.id,
             name: data.task.name,
@@ -15,9 +14,7 @@ self.addEventListener('message', ({ data })=>{
         });
     }
     else if(data && data.type === "delete_task"){
-        console.log("ciao");
         for(var i in tasks){
-            console.log(tasks[i].id + "---" + data.id);
             if(tasks[i].id == data.id){
                 tasks.splice(i, 1);
                 break;
@@ -49,10 +46,8 @@ function sendNotification(title, text){
     
 }
 setInterval(() => {
-    console.log(tasks);
     var now = new Date();
     for(var i in tasks){
-        console.log(tasks[i].moment < now);
         if(tasks[i].moment < now){
             var task = tasks[i];
             sendNotification(task.name, task.text);

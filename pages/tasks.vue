@@ -158,7 +158,7 @@
                             >
                                 <v-icon>mdi-order-bool-descending</v-icon>
                                 Order by:
-                                {{orders[selectedOrder]}}
+                                {{selectedOrder}}
                             </v-btn>
 
                         </template>
@@ -264,14 +264,16 @@
                     'Name',
                     'Time'
                 ],
-                selectedOrder: 0,
+                selectedOrder: 'Name',
             }
         },
 
         mounted(){
             this.updateList();
-            this.order();
-            this.selectedOrder = storageUtils.getSelectedList().order;
+            this.selectedOrder = this.list.order;
+            console.log(this.selectedOrder);
+            this.order(this.selectedOrder);
+            console.log(this.selectedOrder);
         },
 
         methods: {
@@ -327,8 +329,9 @@
             },
 
             order(type){
-                this.selectedOrder=this.orders.indexOf(type);
-                this.list.order=this.selectedOrder;
+                this.selectedOrder=type;
+                this.list.order= this.selectedOrder;
+                console.log(this.selectedOrder);
                 var compare=null;
                 if(type==this.orders[0]){
                     compare =  function(a, b){
@@ -342,10 +345,14 @@
                 }
                 else if (type==this.orders[1]){
                     var refs= this.$refs;
-                    
+                    console.log(this.$refs); 
                     compare = function(a, b){
-                        var d1 = refs[a.id][0].date();
-                        var d2 = refs[b.id][0].date();
+                        console.log(refs);
+                        for(var i in refs){
+                            console.log(refs[i]);
+                        }
+                        var d1 = storageUtils.date(a.date, a.time);
+                        var d2 = storageUtils.date(b.date, b.time);
                         if(d1==0 && d2!=0)
                             return 1;
                         if(d2==0 && d1!=0)

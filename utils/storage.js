@@ -214,5 +214,6 @@ export default {
     getList,
     setTheme,
     isDark,
-    sendTaskToSW
+    sendTaskToSW,
+    date
 }
