@@ -126,13 +126,15 @@ export default {
 
     this.expireDate=this.date();
     this.smartDate=this.task.date;
-    this.checkExpired();
-    this.checkSmartDate();
+    if(this.task.date || this.task.time){
+      this.checkExpired();
+      this.checkSmartDate();
 
-    window.setInterval(() => {
-        this.checkExpired();
-        this.checkSmartDate();
-    }, 10000);
+      window.setInterval(() => {
+          this.checkExpired();
+          this.checkSmartDate();
+      }, 10000);
+    }
   },
 
   props: {
