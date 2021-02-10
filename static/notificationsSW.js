@@ -1,24 +1,43 @@
 console.log("ciaoooooo");
 //self.registration.showNotification('Ciao');
 
-var lists;
-var schedules = [];
+var tasks=[];
 
 
 self.addEventListener('message', ({ data })=>{
-    if (data && data.type === "update_lists" ) {
-        lists = data.lists;
+    if (data && data.type === "new_task" ) {
+        console.log(data.task);
+        tasks.push({
+            id: data.task.id,
+            name: data.task.name,
+            text: data.task.text,
+            moment: data.task.moment,
+        });
     }
-    findSchedules();
+    else if(data && data.type === "delete_task"){
+        console.log("ciao");
+        for(var i in tasks){
+            console.log(tasks[i].id + "---" + data.id);
+            if(tasks[i].id == data.id){
+                tasks.splice(i, 1);
+                break;
+            }
+        }
+    }
 });
 
 function findSchedules(){
-    console.log("Sto per cercare le schedules");
+    findSchedules = [];
     for (var i in lists){
         var tasks = lists[i].tasks;
         for (var j in tasks){
             if(tasks[j].date != null || tasks[j].time != null)
-                console.log(tasks[j].date + " " + tasks[j].time);
+                if(tasks[j].notified==false)
+                    schedules.push({
+                        'task': tasks[j],
+                        'listName': lists[i].name,
+                        'deadLine': date(tasks[j].date, tasks[j].time),
+                    });
         }
     }
 }
@@ -27,4 +46,17 @@ function sendNotification(title, text){
     self.registration.showNotification(title, {
         body: text,
     });
+    
 }
+setInterval(() => {
+    console.log(tasks);
+    var now = new Date();
+    for(var i in tasks){
+        console.log(tasks[i].moment < now);
+        if(tasks[i].moment < now){
+            var task = tasks[i];
+            sendNotification(task.name, task.text);
+            tasks.splice(i, 1);
+        }
+    }
+}, 3000)

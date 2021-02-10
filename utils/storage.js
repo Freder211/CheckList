@@ -2,18 +2,29 @@ if (localStorage.getItem('lists') == undefined) {
     localStorage.setItem('lists', JSON.stringify([]));
     localStorage.removeItem('selectedList');
 }
-updateSW();
 
 //SERVICE WORKER
-function updateSW(){
-    var lists = getAllLists();
+function sendTaskToSW(task){
+    console.log(date(task.date, task.time));
+    task.moment = date(task.date, task.time);
+    if(task.moment > new Date() && !task.checked)
+        navigator.serviceWorker.ready.then(
+            worker => worker.active.postMessage({
+                type: 'new_task',
+                task
+            })
+        )
+}
+
+function deleteTaskToSW(id){
     navigator.serviceWorker.ready.then(
         worker => worker.active.postMessage({
-            type: 'update_lists',
-            lists: lists
+            type: 'delete_task',
+            id: id
         })
     )
 }
+
 
 //MODIFICA LISTE
 function newList(list) {
@@ -31,7 +42,6 @@ function removeList(id) {
         }
     }
     localStorage.setItem('lists', JSON.stringify(lists));
-    updateSW();
 }
 
 function renameList(id, newName) {
@@ -53,7 +63,6 @@ function updateList(list, id) {
         }
     }
     localStorage.setItem('lists', JSON.stringify(lists));
-    updateSW();
 }
 
 function getComplitedTasks(id) {
@@ -113,6 +122,7 @@ function addTask(task) {
     var list = getSelectedList();
     list.tasks.unshift(task);
     updateList(list, list.id);
+    sendTaskToSW(task);
 }
 
 function removeTask(id) {
@@ -124,6 +134,7 @@ function removeTask(id) {
         }
     }
     updateList(list, list.id);
+    deleteTaskToSW(id);
 }
 
 function checkTask(id, value) {
@@ -135,7 +146,48 @@ function checkTask(id, value) {
         }
     }
     updateList(list, list.id);
+    if(value)
+        deleteTaskToSW(id);
+    else{
+        var list = getSelectedList();
+        for(var i in list.tasks){
+            if(list.tasks[i].id == id)
+                sendTaskToSW(list.tasks[i]);
+        }
+    }
 }
+
+//CHECK DATE OF TASKS
+function date(date, time) {
+    if (date==null && time==null)
+        return 0;
+
+    var completeDate;
+    var year, month, day;
+    if(!!date){
+    var splitDate=date.split("-");
+    year=parseInt(splitDate[0]);
+    month=parseInt(splitDate[1]-1);
+    day=parseInt(splitDate[2]);
+    }
+    else{
+    year = new Date().getFullYear();
+    month = new Date().getMonth(); day = new Date().getDate(); }
+       
+    var hour, minute;
+    if(!!time){
+    var splittedTime = time.split(":");
+    hour = parseInt(splittedTime[0]);
+    minute = parseInt(splittedTime[1]);
+    completeDate = new Date(year, month, day, hour, minute);
+    }
+    else{
+    completeDate = new Date(year, month, day);
+    }
+
+    return completeDate; 
+}
+
 
 //THEME
 
@@ -162,5 +214,5 @@ export default {
     getList,
     setTheme,
     isDark,
-    updateSW,
+    sendTaskToSW
 }

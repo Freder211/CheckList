@@ -300,7 +300,8 @@
                         text: this.task.text,
                         checked: false,
                         date: this.task.date,
-                        time: this.task.time
+                        time: this.task.time,
+                        notified: false
                     };
                     this.tasks.unshift(newTask);
                     this.order(this.selectedOrder);
