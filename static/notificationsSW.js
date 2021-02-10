@@ -1,6 +1,4 @@
-console.log("ciaoooooo");
-//self.registration.showNotification('Ciao');
-
+console.log("Service worker loaded");
 var tasks=[];
 
 
@@ -42,11 +40,13 @@ function findSchedules(){
 function sendNotification(title, text){
     self.registration.showNotification(title, {
         body: text,
+        icon: 'homer.png'
     });
     
 }
 setInterval(() => {
     var now = new Date();
+    console.log(tasks);
     for(var i in tasks){
         if(tasks[i].moment < now){
             var task = tasks[i];

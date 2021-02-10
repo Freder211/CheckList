@@ -5,7 +5,6 @@ if (localStorage.getItem('lists') == undefined) {
 
 //SERVICE WORKER
 function sendTaskToSW(task){
-    console.log(date(task.date, task.time));
     task.moment = date(task.date, task.time);
     if(task.moment > new Date() && !task.checked)
         navigator.serviceWorker.ready.then(

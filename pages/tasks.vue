@@ -271,9 +271,7 @@
         mounted(){
             this.updateList();
             this.selectedOrder = this.list.order;
-            console.log(this.selectedOrder);
             this.order(this.selectedOrder);
-            console.log(this.selectedOrder);
         },
 
         methods: {
@@ -331,13 +329,12 @@
             order(type){
                 this.selectedOrder=type;
                 this.list.order= this.selectedOrder;
-                console.log(this.selectedOrder);
                 var compare=null;
                 if(type==this.orders[0]){
                     compare =  function(a, b){
-                        if(a.name < b.name)
+                        if(a.name.toLowerCase() < b.name.toLowerCase())
                             return -1;
-                        if(a.name > b.name)
+                        if(a.name.toLowerCase() > b.name.toLowerCase())
                             return 1;
 
                         return 0;
@@ -345,11 +342,8 @@
                 }
                 else if (type==this.orders[1]){
                     var refs= this.$refs;
-                    console.log(this.$refs); 
                     compare = function(a, b){
-                        console.log(refs);
                         for(var i in refs){
-                            console.log(refs[i]);
                         }
                         var d1 = storageUtils.date(a.date, a.time);
                         var d2 = storageUtils.date(b.date, b.time);

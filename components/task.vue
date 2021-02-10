@@ -33,7 +33,7 @@
             <v-col cols="12" sm="3" md="2" lg="1">
               <div>
                 <v-container>
-                  <v-row v-if="!!this.task.date">
+                  <v-row v-if="!!this.task.date || !!this.task.time">
                     <v-col class="pa-0" align-self="center">
                       <div
                         class="text-subtitle-1 text-center"
@@ -180,8 +180,10 @@ export default {
     },
 
     checkSmartDate(){
-      if(!this.task.date)
+      if(!this.task.date){
+        this.smartDate='Today';
         return;
+      }
       var daysDiff = this.expireDate.getDate() - this.now.getDate();
       if(
         this.now.getFullYear() == this.expireDate.getFullYear() &&
