@@ -3,16 +3,29 @@ if (localStorage.getItem('lists') == undefined) {
     localStorage.removeItem('selectedList');
 }
 
+sendAllTasksToSW();
+
 //SERVICE WORKER
+function sendAllTasksToSW(){
+    var lists = getAllLists();
+    for(var i in lists){
+        var list=lists[i];
+        for(var j in list.tasks){
+            sendTaskToSW(list.tasks[j]);
+        }
+    }
+}
+
 function sendTaskToSW(task){
     task.moment = date(task.date, task.time);
-    if(task.moment > new Date() && !task.checked)
+    if(task.moment > new Date() && !task.checked){
         navigator.serviceWorker.ready.then(
             worker => worker.active.postMessage({
                 type: 'new_task',
                 task
             })
         )
+    }
 }
 
 function deleteTaskToSW(id){
