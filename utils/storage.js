@@ -3,11 +3,13 @@ if (localStorage.getItem('lists') == undefined) {
     localStorage.removeItem('selectedList');
 }
 
+deleteAllTasksToSW();
 sendAllTasksToSW();
 
 //SERVICE WORKER
 function sendAllTasksToSW(){
     var lists = getAllLists();
+    console.log("entrao");
     for(var i in lists){
         var list=lists[i];
         for(var j in list.tasks){
@@ -33,6 +35,15 @@ function deleteTaskToSW(id){
         worker => worker.active.postMessage({
             type: 'delete_task',
             id: id
+        })
+    )
+}
+
+function deleteAllTasksToSW(){
+    console.log("sto pe invià la notifia")
+    navigator.serviceWorker.ready.then(
+        worker => worker.active.postMessage({
+            type: 'delete_all',
         })
     )
 }

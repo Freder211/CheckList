@@ -19,6 +19,10 @@ self.addEventListener('message', ({ data })=>{
             }
         }
     }
+    else if(data && data.type === "delete_all"){
+        console.log("arrivaa notifia pe eliminà tutto");
+        tasks=[];
+    }
 });
 
 function findSchedules(){
