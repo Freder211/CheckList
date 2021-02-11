@@ -1,45 +1,8 @@
-console.log("Service worker loaded");
-var tasks=[];
-
-
 self.addEventListener('message', ({ data })=>{
-    if (data && data.type === "new_task" ) {
-        tasks.push({
-            id: data.task.id,
-            name: data.task.name,
-            text: data.task.text,
-            moment: data.task.moment,
-        });
-    }
-    else if(data && data.type === "delete_task"){
-        for(var i in tasks){
-            if(tasks[i].id == data.id){
-                tasks.splice(i, 1);
-                break;
-            }
-        }
-    }
-    else if(data && data.type === "delete_all"){
-        console.log("arrivaa notifia pe eliminà tutto");
-        tasks=[];
+    if(data && data.type==='send_notfication'){
+        sendNotification(data.title, data.text);
     }
 });
-
-function findSchedules(){
-    findSchedules = [];
-    for (var i in lists){
-        var tasks = lists[i].tasks;
-        for (var j in tasks){
-            if(tasks[j].date != null || tasks[j].time != null)
-                if(tasks[j].notified==false)
-                    schedules.push({
-                        'task': tasks[j],
-                        'listName': lists[i].name,
-                        'deadLine': date(tasks[j].date, tasks[j].time),
-                    });
-        }
-    }
-}
 
 function sendNotification(title, text){
     self.registration.showNotification(title, {
@@ -48,14 +11,3 @@ function sendNotification(title, text){
     });
     
 }
-setInterval(() => {
-    var now = new Date();
-    console.log(tasks);
-    for(var i in tasks){
-        if(tasks[i].moment < now){
-            var task = tasks[i];
-            sendNotification(task.name, task.text);
-            tasks.splice(i, 1);
-        }
-    }
-}, 3000)

@@ -1,53 +1,11 @@
+import notify from '~/utils/notifications.js'
+
 if (localStorage.getItem('lists') == undefined) {
     localStorage.setItem('lists', JSON.stringify([]));
     localStorage.removeItem('selectedList');
 }
 
-deleteAllTasksToSW();
-sendAllTasksToSW();
-
-//SERVICE WORKER
-function sendAllTasksToSW(){
-    var lists = getAllLists();
-    console.log("entrao");
-    for(var i in lists){
-        var list=lists[i];
-        for(var j in list.tasks){
-            sendTaskToSW(list.tasks[j]);
-        }
-    }
-}
-
-function sendTaskToSW(task){
-    task.moment = date(task.date, task.time);
-    if(task.moment > new Date() && !task.checked){
-        navigator.serviceWorker.ready.then(
-            worker => worker.active.postMessage({
-                type: 'new_task',
-                task
-            })
-        )
-    }
-}
-
-function deleteTaskToSW(id){
-    navigator.serviceWorker.ready.then(
-        worker => worker.active.postMessage({
-            type: 'delete_task',
-            id: id
-        })
-    )
-}
-
-function deleteAllTasksToSW(){
-    console.log("sto pe invià la notifia")
-    navigator.serviceWorker.ready.then(
-        worker => worker.active.postMessage({
-            type: 'delete_all',
-        })
-    )
-}
-
+notify.updateDeadlines(getAllLists());
 
 //MODIFICA LISTE
 function newList(list) {
@@ -145,7 +103,7 @@ function addTask(task) {
     var list = getSelectedList();
     list.tasks.unshift(task);
     updateList(list, list.id);
-    sendTaskToSW(task);
+    notify.addTaskToDeadlines(task);
 }
 
 function removeTask(id) {
@@ -157,7 +115,7 @@ function removeTask(id) {
         }
     }
     updateList(list, list.id);
-    deleteTaskToSW(id);
+    notify.removeTaskFromDeadlines(id);
 }
 
 function checkTask(id, value) {
@@ -170,12 +128,12 @@ function checkTask(id, value) {
     }
     updateList(list, list.id);
     if(value)
-        deleteTaskToSW(id);
+        notify.removeTaskFromDeadlines(id);
     else{
         var list = getSelectedList();
         for(var i in list.tasks){
             if(list.tasks[i].id == id)
-                sendTaskToSW(list.tasks[i]);
+                notify.addTaskToDeadlines(list.tasks[i]);
         }
     }
 }
@@ -188,10 +146,10 @@ function date(date, time) {
     var completeDate;
     var year, month, day;
     if(!!date){
-    var splitDate=date.split("-");
-    year=parseInt(splitDate[0]);
-    month=parseInt(splitDate[1]-1);
-    day=parseInt(splitDate[2]);
+        var splitDate=date.split("-");
+        year=parseInt(splitDate[0]);
+        month=parseInt(splitDate[1]-1);
+        day=parseInt(splitDate[2]);
     }
     else{
     year = new Date().getFullYear();
@@ -237,6 +195,5 @@ export default {
     getList,
     setTheme,
     isDark,
-    sendTaskToSW,
     date
 }

@@ -343,8 +343,6 @@
                 else if (type==this.orders[1]){
                     var refs= this.$refs;
                     compare = function(a, b){
-                        for(var i in refs){
-                        }
                         var d1 = storageUtils.date(a.date, a.time);
                         var d2 = storageUtils.date(b.date, b.time);
                         if(d1==0 && d2!=0)
@@ -361,7 +359,6 @@
                 
                 if(compare!=null){
                     this.tasks.sort(compare);
-                    this.pushList();
                 }
                 
             },
