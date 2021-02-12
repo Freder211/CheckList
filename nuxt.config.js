@@ -17,7 +17,7 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: process.env.ROUTER_BASE && process.env.ROUTER_BASE + 'favicon.ico' || '/favicon.ico' }
     ]
   },
 
@@ -45,6 +45,16 @@ export default {
   ],
 
   pwa: {
+    icon: {
+      source: '~/static/icon.png'
+    },
+    meta: {
+      name: 'CheckList',
+    },
+    manifest: {
+      name: 'CheckList',
+      short_name: 'CheckList',
+    },
     workbox: {
       importScripts: [
         'notificationsSW.js'
