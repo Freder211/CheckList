@@ -140,7 +140,7 @@
 
             <v-row justify="center" align="center" align-content="center">
                 <v-col class="px-0" align-self="center">
-                    <v-btn class="addBtn" block tile @click.native="addNew">
+                    <v-btn class="addBtn" :disabled="!task.name" block tile @click.native="addNew">
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
@@ -293,21 +293,19 @@
 
             addNew(){
                 if (this.task.name != ""){
+
                     var newTask = {
-                        id: uuidv4(),
-                        name: this.task.name,
-                        text: this.task.text,
+                        ...this.task,
                         checked: false,
-                        date: this.task.date,
-                        time: this.task.time,
-                        notified: false
+                        notified: false,
+                        id: uuidv4(),
                     };
+
                     this.tasks.unshift(newTask);
                     this.order(this.selectedOrder);
                     storageUtils.addTask(newTask);
 
                     this.task.title="";
-                    this.task.text="";
                     this.task.name="";
                     this.task.text="";
                     this.task.date=null;
@@ -340,7 +338,6 @@
                     }
                 }
                 else if (type==this.orders[1]){
-                    var refs= this.$refs;
                     compare = function(a, b){
                         var d1 = storageUtils.date(a.date, a.time);
                         var d2 = storageUtils.date(b.date, b.time);

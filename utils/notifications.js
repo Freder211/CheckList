@@ -75,7 +75,6 @@ function date(date, time) {
 
 setInterval( () => {
     var now = new Date();
-    console.log(deadlines);
     for (let i in deadlines){
         let task = deadlines[i];
         if(deadlines[i].moment <= now){
