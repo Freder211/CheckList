@@ -37,7 +37,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/pwa' 
+    '@nuxtjs/pwa'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -45,7 +45,7 @@ export default {
   ],
 
   pwa: {
-    workbox:{
+    workbox: {
       importScripts: [
         'notificationsSW.js'
       ],
@@ -57,7 +57,7 @@ export default {
     customVariables: ['~/assets/variables.scss'],
     theme: {
       themes: {
-        light:{
+        light: {
           primary: colors.blue,
           secondary: colors.grey.darken1,
           accent: colors.shades.black,
@@ -78,5 +78,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  router: {
+    base: process.env.ROUTER_BASE
   }
 }

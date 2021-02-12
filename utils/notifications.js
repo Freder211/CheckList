@@ -15,7 +15,6 @@ function updateDeadlines(lists){
     deadlines = [];
     for(var list of lists){
         for(var task of list.tasks){
-            console.log(task);
             addTaskToDeadlines(task);
         }
     }
