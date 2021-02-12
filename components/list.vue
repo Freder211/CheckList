@@ -125,10 +125,10 @@
                 this.$emit('removed', this.id);
             },
             edit(){
-                if(!this.editing){ //inizio editing
+                if(!this.editing){
                     this.$refs.textField.focus();
                 }
-                else if(this.edit.oldName!=this.name){ //editing terminato
+                else if(this.edit.oldName!=this.name){
                     storageUtils.renameList(this.id, this.name);
                 }
                 this.editing = !this.editing;

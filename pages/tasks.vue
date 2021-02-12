@@ -278,8 +278,7 @@
 
             updateList(){
                 this.list = storageUtils.getSelectedList();
-                //console.log(storageUtils.getSelectedList());
-                //console.log(this.list);????
+                
                 if(this.list == -1){ 
                     this.error=true;
                     return;

@@ -47,7 +47,7 @@ function updateList(list, id) {
 }
 
 function getComplitedTasks(id) {
-    var counter = 0; //array che contiene task completate e quelle totali
+    var counter = 0; 
     var lists = getAllLists();
     for (var i in lists) {
         if (lists[i].id == id) {
@@ -75,16 +75,16 @@ function setList(id) {
 function getSelectedList() {
     var selectedList = localStorage.getItem('selectedList');
 
-    if (selectedList == null) //se non esiste una lista selezionata restituisce -1
+    if (selectedList == null) 
         return -1;
 
     var lists = JSON.parse(localStorage.lists);
-    for (var i in lists) { //cerca nelle liste quella selezionata e la restituisce
+    for (var i in lists) {
         if (lists[i].id == selectedList) {
             return lists[i];
         }
     }
-    return -1; //se non ha trovato la list nell'elenco delle liste, allora restituisce -1
+    return -1;
 }
 
 function getList(id) {

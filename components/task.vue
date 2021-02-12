@@ -118,7 +118,7 @@ export default {
     };
   },
 
-  //eseguito al momento della creazione del componente
+  
   mounted() {
     this.show=true;
     if (this.task.text == "" || this.task.text == null)
