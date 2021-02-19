@@ -37,12 +37,55 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/axios'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/proxy'
   ],
+
+  axios: {
+    baseURL: 'http://localhost:8000/',
+    proxyHeader: false,
+    credentials: false,
+    proxy: true
+  },
+
+  proxy: {
+    '/api-token-auth/': {
+      target: 'http://localhost:8000',
+    }
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: '/'
+    },
+    strategies: {
+      local: {
+        endpoints: {
+
+          login: {
+            url:'api-token-auth/',
+            method: 'post',
+            propertyName: 'data.token',
+          },
+          logout: false,
+          user: false,
+
+        },
+        tokenType: '',
+        tokenName: 'Authorization',
+        autoFetchUser: 'false',
+      }
+    }
+  },
 
   pwa: {
     icon: {
