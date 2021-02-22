@@ -111,14 +111,17 @@
         },
 
         mounted(){
+            /*
             this.totalTasks = storageUtils.getList(this.id).tasks.length;
             this.completedTasks = storageUtils.getComplitedTasks(this.id);
             this.percentage = this.completedTasks*100/this.totalTasks;
+            */
+
         },
 
         props: {
             name: String,
-            id: String
+            id: Number
         },    
         methods: {
             remove(){

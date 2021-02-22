@@ -64,17 +64,19 @@
         },
 
         mounted(){
-            var lists = storageUtils.getAllLists();
-            for(var i in lists){
-                this.lists.push(lists[i]);
+            let token = localStorage.getItem('token');
+            if(token){
+                this.$axios.setToken(token, 'Bearer');
             }
+            this.getAllLists();
         },
         
         methods: {
-            addNew(){
+            async addNew(){
                 if (this.name != ""){
-                    var list = {id: uuidv4(), name: this.name, tasks: [], order: 'Name'};
-                    storageUtils.newList(list);
+                    var list = {name: this.name, order: 'Name'};
+                    let res = await this.$axios.$post('/api/list/', list); 
+                    console.log(res);
                     this.lists.push(list);
                     this.name="";
                 }
@@ -87,7 +89,13 @@
                     }
                 }
             },
-            
+            async getAllLists(){
+                let lists = await this.$axios.$get('/api/lists/');
+                for(var i in lists){
+                    console.log(lists[i]);
+                    this.lists.push(lists[i]);
+                }
+            }
         },
     }
 </script>

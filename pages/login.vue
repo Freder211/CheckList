@@ -73,10 +73,14 @@ export default {
 
             try{
                 let res = await this.$auth.loginWith("local", credentials);
-                console.log(res)
+                let token = res.data.access;
+                console.log(token)
+                this.$axios.setToken(token, 'Bearer');
+                localStorage.setItem("token", token)
+                this.$router.push({name: 'index'});
             }
             catch(error){
-                console.log(error.response)
+                console.log(error)
             }
         }
     }

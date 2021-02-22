@@ -49,7 +49,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://localhost:8000/',
+    baseURL: 'http://localhost:8000',
     proxyHeader: false,
     credentials: false,
     proxy: true
@@ -57,6 +57,12 @@ export default {
 
   proxy: {
     '/api-token-auth/': {
+      target: 'http://localhost:8000',
+    },
+    '/api/lists/': {
+      target: 'http://localhost:8000',
+    },
+    '/api/list/': {
       target: 'http://localhost:8000',
     }
   },
