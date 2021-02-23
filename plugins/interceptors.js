@@ -1,13 +1,16 @@
 export default function({$axios, store, redirect}){
     $axios.onError(error => {
-        if(error.response && error.response === 500)
-            redirect('/login')
+        console.log(error.response)
+        redirect('/login')
     })
 
     $axios.interceptors.response.use(
         response => {
-            if (response.status === 200){
+            console.log(response)
+            if (response.status == 200){
+                console.log('wow')
                 if(response.request.responseURL && response.request.responseURL.includes('login')){
+                    console.log('wow')
                     store.dispatch("setUser", response);
                 }
             }

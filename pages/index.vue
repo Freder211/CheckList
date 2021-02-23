@@ -52,6 +52,7 @@
 <script>
     import storageUtils from '~/utils/storage.js';
     import { v4 as uuidv4} from 'uuid';
+    import apiUtils from '~/utils/api.js'
 
     export default {
         transition: 'lists-transition',
@@ -90,12 +91,12 @@
                 }
             },
             async getAllLists(){
-                let lists = await this.$axios.$get('/api/lists/');
+                let lists = await apiUtils.getLists(this.$axios)
                 for(var i in lists){
                     console.log(lists[i]);
                     this.lists.push(lists[i]);
                 }
-            }
+            },
         },
     }
 </script>
