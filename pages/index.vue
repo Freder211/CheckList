@@ -81,22 +81,36 @@
         },
         
         methods: {
-            async addNew(){
+            addNew(){
                 if (this.name != ""){
                     var newList = {name: this.name, order: 'Name'};
-                    let res = await this.$axios.$post('/api/list/', newList); 
-                    console.log(res);
-                    this.lists.push(res);
+                    apiUtils.createList(this.$axios, newList).then(
+                        res => {
+                            //implementa caricamento
+                            this.lists.push(res);
+                        },
+                        err => {
+                            //implmenta gestione errore
+                            console.log(err)
+                        }
+                    )
                     this.name="";
                 }
             },
             remove(id){
-                storageUtils.removeList(id);
-                for(var i in this.lists){
-                    if(this.lists[i].id == id){
-                        this.lists.splice(i, 1);
+                apiUtils.deleteList(this.$axios, id).then(
+                    res => {
+                        //anche qua loading
+                        for(var i in this.lists){
+                            if(this.lists[i].id == id){
+                                this.lists.splice(i, 1);
+                            }
+                        }
+                    },
+                    err => {
+                        //gestisci errore
                     }
-                }
+                ) 
             },
             async getAllLists(){
                 let lists = await apiUtils.getLists(this.$axios)

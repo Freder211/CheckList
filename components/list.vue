@@ -99,6 +99,7 @@
 </style>
 
 <script>
+    import apiUtils from '~/utils/api.js';
     import storageUtils from '~/utils/storage.js';
     export default {
         data() {
@@ -136,7 +137,12 @@
                     this.$refs.textField.focus();
                 }
                 else if(this.edit.oldName!=this.name){
-                    storageUtils.renameList(this.id, this.name);
+                    apiUtils.patchList(this.$axios, this.list.id, this.name)
+                    .then(
+                        res => {
+                            //implementa caricamento/errori
+                        }
+                    )
                 }
                 this.editing = !this.editing;
             },

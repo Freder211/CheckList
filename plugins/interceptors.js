@@ -4,6 +4,7 @@ export default function({$axios, store, redirect}){
     $axios.onError(error => {
     })
 
+    /*
     $axios.interceptors.response.use(
         response => {
             if (response.status == 200){
@@ -14,6 +15,7 @@ export default function({$axios, store, redirect}){
             return response;
         }
     )
+    */
 
     $axios.onRequest(
         request => {
@@ -24,24 +26,26 @@ export default function({$axios, store, redirect}){
     $axios.onResponseError(
         error => {
             console.log(error.response)
-            if (error.response.data.code == 'token_not_valid'){ //enters if some kind of token is not valid
-                //if the access token was used
+            if (error.response.data.code == 'token_not_valid'){ //entra se uno token non è valido
                 let {token_class} = error.response.data.messages[0]
-                if (token_class=='AccessToken'){ //enters if access token is not valid
+                if (token_class=='AccessToken'){ //entra se il token di accesso è scaduto
                     
-                    apiUtils.refreshToken($axios).then(
+                    //prova a ottenere il nuovo access token attraverso il refresh token
+                    return apiUtils.refreshToken($axios).then(
                         (response) => {
-                            console.log('ciau')
                             apiUtils.setToken($axios, response.access)
+                            console.log('Nuovo token aggiornato')
+                            error.config.headers['Authorization'] = 'Bearer ' + response.access;
+                            error.config.baseURL = undefined;
+                            return $axios.request(error.config)
                         },
                         (error) => {
                             console.log('Ops, anche il refresh token è scaduto')
                             console.log(error)
                         }
                     )
-                    return
                 }
-                else{ //enters if refresh token is not valid
+                else{ //entra se il token di refresh è scaduto
                     redirect('/login')
                 }
             }
