@@ -65,6 +65,15 @@ export default {
     },
     '/api/list/': {
       target: 'http://localhost:8000',
+    },
+    '/api/token/refresh': {
+      target: 'http://localhost:8000',
+    },
+    '/api/user/': {
+      target: 'http://localhost:8000',
+    },
+    '/api/tasks/': {
+      target: 'http://localhost:8000',
     }
   },
 
@@ -81,7 +90,7 @@ export default {
           login: {
             url:'api-token-auth/',
             method: 'post',
-            propertyName: 'data.token',
+            propertyName: 'data.access',
           },
           logout: false,
           user: false,

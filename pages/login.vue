@@ -53,7 +53,9 @@
 </template>
 
 <script>
+import apiUtils from '~/utils/api.js'
 export default {
+
     data(){
         return {
             username: '',
@@ -63,7 +65,6 @@ export default {
 
     methods: {
         async login(){
-            console.log('CIAOOOO');
             let credentials = {
                 data: {
                     'username': this.username,
@@ -73,10 +74,12 @@ export default {
 
             try{
                 let res = await this.$auth.loginWith("local", credentials);
-                let token = res.data.access;
-                console.log(token)
-                this.$axios.setToken(token, 'Bearer');
-                localStorage.setItem("token", token)
+                let token = res.data;
+                console.log(token.access)
+
+                apiUtils.setToken(this.$axios,token.access)
+                localStorage.setItem("refresh", token.refresh)
+
                 this.$router.push({name: 'index'});
             }
             catch(error){

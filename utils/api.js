@@ -1,19 +1,31 @@
+
+function setToken(axios, token){
+    axios.setToken(token, 'Bearer');
+    localStorage.setItem('token', token)
+}
+
 async function getLists(axios){
     return await axios.$get('api/lists/')
 }
 
 async function getTasks(axios, list){
-    let lists = await axios.$get('/api/list/' + list)
+    let lists = await axios.$get('/api/tasks/' + list)
     return lists
 }
 
-async function getTaskCount(axios, list_id){
-    let c = await axios.$get('/api/nTasks/' + list_id)
-    return c
+
+async function refreshToken(axios){
+    let token = await axios.$post('/api/token/refresh/', {
+        'refresh': localStorage.getItem('refresh')
+    })
+    return token
 }
 
+
+
 export default {
+    setToken,
     getLists,
     getTasks,
-    getTaskCount
+    refreshToken,
 }

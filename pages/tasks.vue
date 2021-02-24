@@ -236,6 +236,7 @@
 <script>
     
     import storageUtils from '~/utils/storage.js';
+    import apiUtils from '~/utils/api.js';
     import { v4 as uuidv4} from 'uuid';
 
     export default {
@@ -269,22 +270,29 @@
         },
 
         mounted(){
+            let token = localStorage.getItem('token');
+            if(token){
+                this.$axios.setToken(token, 'Bearer');
+            }
+
             this.updateList();
-            this.selectedOrder = this.list.order;
-            this.order(this.selectedOrder);
+            //this.selectedOrder = this.list.order;
+            //this.order(this.selectedOrder);
+        },
+
+        async asyncData({$axios}){
         },
 
         methods: {
 
-            updateList(){
-                this.list = storageUtils.getSelectedList();
+            async updateList(){
+                this.list = JSON.parse(localStorage.getItem('selectedList'));
+                this.tasks = await apiUtils.getTasks(this.$axios, this.list.id);
                 
                 if(this.list == -1){ 
                     this.error=true;
                     return;
                 }
-
-                this.tasks  = this.list.tasks;
             },
 
             pushList(){

@@ -21,7 +21,8 @@
             </v-row>
 
             <transition-group name="lists" tag="div">
-                <List v-for="l in lists" :key="l.id" :name="l.name" :id="l.id" v-on:removed="remove"/>
+                <!--CHIEDERE PER LA DECOSTRUZIONE NEL V-FOR-->
+                <List v-for="l in lists" :key="l.id" :name="l.name" :id="l.id" :list="l" v-on:removed="remove"/>
             </transition-group>
         </v-container>
 
@@ -71,14 +72,21 @@
             }
             this.getAllLists();
         },
+
+        async asyncData({$axios}){
+            let token = localStorage.getItem('token');
+            if(token){
+                $axios.setToken(token, 'Bearer');
+            }
+        },
         
         methods: {
             async addNew(){
                 if (this.name != ""){
-                    var list = {name: this.name, order: 'Name'};
-                    let res = await this.$axios.$post('/api/list/', list); 
+                    var newList = {name: this.name, order: 'Name'};
+                    let res = await this.$axios.$post('/api/list/', newList); 
                     console.log(res);
-                    this.lists.push(list);
+                    this.lists.push(res);
                     this.name="";
                 }
             },

@@ -111,15 +111,18 @@
         },
 
         mounted(){
-            /*
-            this.totalTasks = storageUtils.getList(this.id).tasks.length;
-            this.completedTasks = storageUtils.getComplitedTasks(this.id);
+            let token = localStorage.getItem('token');
+            if(token){
+                this.$axios.setToken(token, 'Bearer');
+            }
+            this.totalTasks = this.list.totalTasks;
+            this.completedTasks = this.list.checkedTasks;
             this.percentage = this.completedTasks*100/this.totalTasks;
-            */
 
         },
 
         props: {
+            list: Object,
             name: String,
             id: Number
         },    
@@ -137,7 +140,8 @@
                 this.editing = !this.editing;
             },
             show(){
-                storageUtils.setList(this.id); 
+                let selectedList = JSON.stringify(this.list)
+                localStorage.setItem('selectedList', selectedList)
                 this.$router.push({name: 'tasks'});
             }
 
