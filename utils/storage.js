@@ -1,5 +1,11 @@
 import notify from '~/utils/notifications.js'
 
+function getSelectedList(){
+    let list = localStorage.getItem('selectedList');
+    list = JSON.parse(list);
+    return list;
+}
+
 if (localStorage.getItem('lists') == undefined) {
     localStorage.setItem('lists', JSON.stringify([]));
     localStorage.removeItem('selectedList');
@@ -72,6 +78,7 @@ function setList(id) {
     localStorage.setItem('selectedList', id);
 }
 
+/*
 function getSelectedList() {
     var selectedList = localStorage.getItem('selectedList');
 
@@ -86,6 +93,7 @@ function getSelectedList() {
     }
     return -1;
 }
+*/
 
 function getList(id) {
     var lists = getAllLists();
@@ -186,7 +194,6 @@ export default {
     addTask,
     removeTask,
     setList,
-    getSelectedList,
     updateList,
     removeList,
     renameList,
@@ -195,5 +202,7 @@ export default {
     getList,
     setTheme,
     isDark,
-    date
+    date,
+
+    getSelectedList,
 }

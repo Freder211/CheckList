@@ -102,7 +102,8 @@
 </style>
 
 <script>
-import storageUtils from "~/utils/storage.js";
+import storageUtils from '~/utils/storage.js'
+import apiUtils from '~/utils/api.js'
 
 export default {
   data() {
@@ -115,6 +116,8 @@ export default {
 
       show: false,
       checked: this.task.checked,
+
+      selectedList: storageUtils.getSelectedList().id
     };
   },
 
@@ -147,7 +150,11 @@ export default {
         return this.task.checked;
       },
       set(val) {
-        storageUtils.checkTask(this.task.id, val);
+        apiUtils.checkTask(this.$axios, this.selectedList, this.task.id, val).then(
+          (res) => {
+            //implementare qualcosa per far vedere all'utente il successo o il fallimento
+          }
+        );
         this.checked = val;
       },
     },

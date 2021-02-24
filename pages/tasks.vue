@@ -238,6 +238,7 @@
     import storageUtils from '~/utils/storage.js';
     import apiUtils from '~/utils/api.js';
     import { v4 as uuidv4} from 'uuid';
+import api from '~/utils/api.js';
 
     export default {
 
@@ -275,9 +276,7 @@
                 this.$axios.setToken(token, 'Bearer');
             }
 
-            this.updateList();
-            //this.selectedOrder = this.list.order;
-            //this.order(this.selectedOrder);
+            this.updateList()
         },
 
         async asyncData({$axios}){
@@ -288,11 +287,9 @@
             async updateList(){
                 this.list = JSON.parse(localStorage.getItem('selectedList'));
                 this.tasks = await apiUtils.getTasks(this.$axios, this.list.id);
-                
-                if(this.list == -1){ 
-                    this.error=true;
-                    return;
-                }
+
+                this.selectedOrder = this.list.order;
+                this.order(this.selectedOrder);
             },
 
             pushList(){
@@ -306,12 +303,19 @@
                         ...this.task,
                         checked: false,
                         notified: false,
-                        id: uuidv4(),
                     };
 
-                    this.tasks.unshift(newTask);
-                    this.order(this.selectedOrder);
-                    storageUtils.addTask(newTask);
+                    apiUtils.createTask(this.$axios, this.list.id, newTask)
+                    .then(
+                        res => {
+                            this.tasks.unshift(res)
+                            this.order(this.selectedOrder);
+                        },
+                        err => {
+                            //gestisci errore
+                        }
+                    )
+
 
                     this.task.title="";
                     this.task.name="";
@@ -323,7 +327,12 @@
 
 
             remove(id){
-                storageUtils.removeTask(id);
+                apiUtils.deleteTask(this.$axios, this.list.id, id).then(
+                    res => {
+                        //implementa loading
+                        console.log(res)
+                    }
+                )
                 for(var i in this.tasks){
                     if(this.tasks[i].id == id){
                         this.tasks.splice(i, 1);

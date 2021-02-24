@@ -115,6 +115,7 @@
             if(token){
                 this.$axios.setToken(token, 'Bearer');
             }
+            
             this.totalTasks = this.list.totalTasks;
             this.completedTasks = this.list.checkedTasks;
             this.percentage = this.completedTasks*100/this.totalTasks;

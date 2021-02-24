@@ -57,6 +57,9 @@ export default {
   },
 
   proxy: {
+    '/api/task/': {
+      target: 'http://localhost:8000',
+    },
     '/api-token-auth/': {
       target: 'http://localhost:8000',
     },
