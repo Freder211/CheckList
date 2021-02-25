@@ -26,14 +26,9 @@ export default function({$axios, store, redirect, error: nuxtError}){
     $axios.onResponseError(
         error => {
             if (error.response.data.code == 'token_not_valid'){ //entra se uno token non è valido
-                console.log('ENTRATO IF')
                 let {token_class} = error.response.data.messages[0]
-                console.log('SEMPRE NELL\'IF')
                 if (token_class=='AccessToken'){ //entra se il token di accesso è scaduto
                     
-                    //prova a ottenere il nuovo access token attraverso il refresh token
-                    console.log('oh no')
-                    /*
                     return apiUtils.refreshToken($axios).then(
                         (response) => {
                             apiUtils.setToken($axios, response.access)
@@ -49,14 +44,13 @@ export default function({$axios, store, redirect, error: nuxtError}){
                             redirect('/login')
                         }
                     )
-                    */
                 }
             }
             else{
                 console.log(error.response)
                 nuxtError({
                     statusCode: error.response.status,
-                    message: error.message,
+                    message: error.response.statusText,
                     error: error
                 })
                 

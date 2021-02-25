@@ -13,14 +13,31 @@
                 </v-col>
 
                 <v-col md="1" sm="2" cols="3" align-self="center">
-                    <v-btn class="addBtn" block tile @click.native="addNew">
+                    <v-btn 
+                        class="addBtn"
+                        block
+                        tile
+                        v-bind:loading="createLoading"
+                        v-bind:disabled="createLoading"
+                        @click.native="addNew"
+                    >
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
 
             </v-row>
 
-            <transition-group name="lists" tag="div">
+            <div v-if="listsLoading" class="text-center mt-10">
+                <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    size="200"
+                    width="10"
+                >
+                </v-progress-circular>
+            </div>
+
+            <transition-group v-else name="lists" tag="div">
                 <!--CHIEDERE PER LA DECOSTRUZIONE NEL V-FOR-->
                 <List v-for="l in lists" :key="l.id" :name="l.name" :id="l.id" :list="l" v-on:removed="remove"/>
             </transition-group>
@@ -51,8 +68,6 @@
 </style>
 
 <script>
-    import storageUtils from '~/utils/storage.js';
-    import { v4 as uuidv4} from 'uuid';
     import apiUtils from '~/utils/api.js'
 
     export default {
@@ -62,6 +77,9 @@
             return {
                 lists: [],
                 name: "",
+
+                createLoading: false,
+                listsLoading: true,
             }
         },
 
@@ -73,26 +91,17 @@
             this.getAllLists();
         },
 
-        async asyncData({$axios}){
-            let token = localStorage.getItem('token');
-            if(token){
-                $axios.setToken(token, 'Bearer');
-            }
-        },
-        
         methods: {
             addNew(){
                 if (this.name != ""){
+                    this.createLoading = true;
+
                     var newList = {name: this.name, order: 'Name'};
                     apiUtils.createList(this.$axios, newList).then(
                         res => {
-                            //implementa caricamento
                             this.lists.push(res);
+                            this.createLoading = false;
                         },
-                        err => {
-                            //implmenta gestione errore
-                            console.log(err)
-                        }
                     )
                     this.name="";
                 }
@@ -107,17 +116,18 @@
                             }
                         }
                     },
-                    err => {
-                        //gestisci errore
-                    }
                 ) 
             },
-            async getAllLists(){
-                let lists = await apiUtils.getLists(this.$axios)
-                for(var i in lists){
-                    console.log(lists[i]);
-                    this.lists.push(lists[i]);
-                }
+            getAllLists(){
+                apiUtils.getLists(this.$axios).then(
+                    lists => {
+                        for(var i in lists){
+                            console.log(lists[i]);
+                            this.lists.push(lists[i]);
+                        }
+                        this.listsLoading=false;
+                    }
+                )
             },
         },
     }
