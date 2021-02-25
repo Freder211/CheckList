@@ -33,6 +33,7 @@
                 <v-col cols="12" sm="5">
                     <v-text-field 
                         class="mr-4"
+                        :rules="[value => (value || '').length <= 20 || 'Max 20 characters']"
                         type="text" 
                         v-model="task.name"
                         label="Name*"
@@ -140,7 +141,14 @@
 
             <v-row justify="center" align="center" align-content="center">
                 <v-col class="px-0" align-self="center">
-                    <v-btn class="addBtn" :disabled="!task.name" block tile @click.native="addNew">
+                    <v-btn
+                        class="addBtn"
+                        :disabled="(!task.name || task.name.length>20) || createLoading"
+                        :loading="createLoading"
+                        block
+                        tile
+                        @click.native="addNew"
+                    >
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </v-col>
@@ -182,7 +190,17 @@
                 </v-col>
             </v-row>
 
-            <transition-group name="list" tag="div">
+            <div v-if="tasksLoading" class="text-center mt-10">
+                <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    size="200"
+                    width="10"
+                >
+                </v-progress-circular>
+            </div>
+
+            <transition-group v-else name="list" tag="div">
                 <Task v-for="t in tasks"
                     :key="t.id"
                     :task="t"
@@ -267,6 +285,9 @@ import api from '~/utils/api.js';
                     'Time'
                 ],
                 selectedOrder: 'Name',
+
+                tasksLoading: true,
+                createLoading: false,
             }
         },
 
@@ -279,15 +300,13 @@ import api from '~/utils/api.js';
             this.updateList()
         },
 
-        async asyncData({$axios}){
-        },
-
         methods: {
 
             async updateList(){
                 this.list = JSON.parse(localStorage.getItem('selectedList'));
                 this.tasks = await apiUtils.getTasks(this.$axios, this.list.id);
 
+                this.tasksLoading = false;
                 this.selectedOrder = this.list.order;
                 this.order(this.selectedOrder);
             },
@@ -298,6 +317,7 @@ import api from '~/utils/api.js';
 
             addNew(){
                 if (this.task.name != ""){
+                    this.createLoading = true;
 
                     var newTask = {
                         ...this.task,
@@ -310,9 +330,7 @@ import api from '~/utils/api.js';
                         res => {
                             this.tasks.unshift(res)
                             this.order(this.selectedOrder);
-                        },
-                        err => {
-                            //gestisci errore
+                            this.createLoading = false;
                         }
                     )
 
@@ -329,15 +347,14 @@ import api from '~/utils/api.js';
             remove(id){
                 apiUtils.deleteTask(this.$axios, this.list.id, id).then(
                     res => {
-                        //implementa loading
-                        console.log(res)
+                        for(var i in this.tasks){
+                            if(this.tasks[i].id == id){
+                                this.tasks.splice(i, 1);
+                            }
+                        }
+                        Promise.resolve(true); 
                     }
                 )
-                for(var i in this.tasks){
-                    if(this.tasks[i].id == id){
-                        this.tasks.splice(i, 1);
-                    }
-                }
             },
 
             order(type){

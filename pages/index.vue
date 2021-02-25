@@ -8,6 +8,7 @@
                         v-model="name"
                         label="New list"
                         hide-details="true"
+                        :rules="[value => (value || '').length <= 20 || 'Max 20 characters']"
                     >
                     </v-text-field>
                 </v-col>
@@ -38,8 +39,7 @@
             </div>
 
             <transition-group v-else name="lists" tag="div">
-                <!--CHIEDERE PER LA DECOSTRUZIONE NEL V-FOR-->
-                <List v-for="l in lists" :key="l.id" :name="l.name" :id="l.id" :list="l" v-on:removed="remove"/>
+                <List v-for="l in lists" :key="l.id" :list="l" v-on:removed="remove"/>
             </transition-group>
         </v-container>
 
@@ -93,7 +93,7 @@
 
         methods: {
             addNew(){
-                if (this.name != ""){
+                if (this.name != "" && this.name.length <= 20){
                     this.createLoading = true;
 
                     var newList = {name: this.name, order: 'Name'};
@@ -109,7 +109,6 @@
             remove(id){
                 apiUtils.deleteList(this.$axios, id).then(
                     res => {
-                        //anche qua loading
                         for(var i in this.lists){
                             if(this.lists[i].id == id){
                                 this.lists.splice(i, 1);

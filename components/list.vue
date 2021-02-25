@@ -12,9 +12,10 @@
                                     }"
                                     class="font-weight-bold"
                                     ref="textField"
-                                    v-model="name"
+                                    v-model="list.name"
                                     v-bind:readonly="!this.editing"
                                     v-bind:outlined="this.editing"
+                                    :rules="[value => (value || '').length <= 20 || 'Max 20 characters']"
                                     hide-details="true"
                                     solo
                                     flat
@@ -40,6 +41,7 @@
                                     class="cardElement"
                                     rounded
                                     text
+                                    v-bind:disabled="(this.list.name.length > 20 || this.list.name.length<=0)"
                                     @click="edit"
                                 >
                                     <v-icon v-if="!this.editing">mdi-pencil</v-icon>
@@ -100,7 +102,6 @@
 
 <script>
     import apiUtils from '~/utils/api.js';
-    import storageUtils from '~/utils/storage.js';
     export default {
         data() {
             return{
@@ -108,6 +109,9 @@
                 totalTasks: 0,
                 completedTasks: 0,
                 percentage: 0,
+
+                editLoading: false,
+                removeLoading: false,
             }
         },
 
@@ -125,22 +129,22 @@
 
         props: {
             list: Object,
-            name: String,
-            id: Number
         },    
         methods: {
             remove(){
-                this.$emit('removed', this.id);
+                this.$emit('removed', this.list.id);
             },
             edit(){
                 if(!this.editing){
+                    this.edit.oldName=this.list.name
                     this.$refs.textField.focus();
                 }
-                else if(this.edit.oldName!=this.name){
-                    apiUtils.patchList(this.$axios, this.list.id, this.name)
+                else if(this.edit.oldName!=this.list.name){
+                    console.log(this.edit.oldName)
+                    apiUtils.patchList(this.$axios, this.list.id, this.list.name)
                     .then(
                         res => {
-                            //implementa caricamento/errori
+
                         }
                     )
                 }

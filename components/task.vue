@@ -75,6 +75,8 @@
                 min-height="50"
                 height="100%"
                 rounded
+                :loading="deleteLoading"
+                :disabled='deleteLoading'
                 tile
                 @click="remove"
               >
@@ -117,7 +119,9 @@ export default {
       show: false,
       checked: this.task.checked,
 
-      selectedList: storageUtils.getSelectedList().id
+      selectedList: storageUtils.getSelectedList().id,
+
+      deleteLoading: false,
     };
   },
 
@@ -175,7 +179,8 @@ export default {
 
     remove() {
       this.show=false;
-      this.$emit("removed", this.task.id);
+      this.deleteLoading=true;
+      this.$emit("removed", this.task.id)
     },
 
     checkExpired(){
