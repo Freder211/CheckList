@@ -1,9 +1,17 @@
-
+/////////TOKEN////////////
 function setToken(axios, token){
     axios.setToken(token, 'Bearer');
     localStorage.setItem('token', token)
 }
 
+async function refreshToken(axios){
+    return await axios.$post('/api/token/refresh/', {
+        'refresh': localStorage.getItem('refresh')
+    })
+}
+
+
+//////////LISTS//////////
 async function getLists(axios){
     return await axios.$get('api/lists/')
 }
@@ -25,8 +33,7 @@ async function deleteList(axios, list_id){
 
 ////////TASKS/////////
 async function getTasks(axios, list){
-    let lists = await axios.$get('/api/tasks/' + list)
-    return lists
+    return await axios.$get('/api/tasks/' + list)
 }
 
 async function createTask(axios, list_id, new_task){
@@ -44,13 +51,6 @@ async function deleteTask(axios, list_id, task_id){
     return await axios.$delete(`/api/task/${list_id}/${task_id}/`)
 }
 
-
-async function refreshToken(axios){
-    let token = await axios.$post('/api/token/refresh/', {
-        'refresh': localStorage.getItem('refresh')
-    })
-    return token
-}
 
 
 
