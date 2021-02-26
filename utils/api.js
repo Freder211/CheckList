@@ -20,10 +20,17 @@ async function createList(axios, newList){
     return await axios.$post(`/api/list/`, newList)
 }
 
-async function patchList(axios, list_id, name){
+async function patchListName(axios, list_id, name){
     return await axios.$patch(
         `/api/list/${list_id}/`,
         {'name': name}
+    )
+}
+
+async function patchListOrder(axios, list_id, order){
+    return await axios.$patch(
+        `/api/list/${list_id}/`,
+        {'order': order}
     )
 }
 
@@ -32,8 +39,8 @@ async function deleteList(axios, list_id){
 }
 
 ////////TASKS/////////
-async function getTasks(axios, list){
-    return await axios.$get('/api/tasks/' + list)
+async function getTasks(axios, list_id){
+    return await axios.$get(`/api/tasks/${list_id}/`)
 }
 
 async function createTask(axios, list_id, new_task){
@@ -60,7 +67,8 @@ export default {
 
     getLists,
     createList,
-    patchList,
+    patchListName,
+    patchListOrder,
     deleteList,
 
     getTasks,

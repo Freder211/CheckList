@@ -141,7 +141,7 @@
                 }
                 else if(this.edit.oldName!=this.list.name){
                     console.log(this.edit.oldName)
-                    apiUtils.patchList(this.$axios, this.list.id, this.list.name)
+                    apiUtils.patchListName(this.$axios, this.list.id, this.list.name)
                     .then(
                         res => {
 

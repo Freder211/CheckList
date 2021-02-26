@@ -34,7 +34,7 @@
                     <v-text-field 
                         class="mr-4"
                         :rules="[value => (value || '').length <= 20 || 'Max 20 characters']"
-                        type="text" 
+                        order="text" 
                         v-model="task.name"
                         label="Name*"
                     >
@@ -43,7 +43,7 @@
 
                 <v-col cols="12" sm="7">
                     <v-text-field 
-                        type="text" 
+                        order="text" 
                         v-model="task.text"
                         label="Description"
                     >
@@ -255,7 +255,6 @@
     
     import storageUtils from '~/utils/storage.js';
     import apiUtils from '~/utils/api.js';
-    import { v4 as uuidv4} from 'uuid';
 import api from '~/utils/api.js';
 
     export default {
@@ -307,12 +306,6 @@ import api from '~/utils/api.js';
                 this.tasks = await apiUtils.getTasks(this.$axios, this.list.id);
 
                 this.tasksLoading = false;
-                this.selectedOrder = this.list.order;
-                this.order(this.selectedOrder);
-            },
-
-            pushList(){
-                storageUtils.updateList(this.list, this.list.id);
             },
 
             addNew(){
@@ -329,7 +322,6 @@ import api from '~/utils/api.js';
                     .then(
                         res => {
                             this.tasks.unshift(res)
-                            this.order(this.selectedOrder);
                             this.createLoading = false;
                         }
                     )
@@ -357,40 +349,14 @@ import api from '~/utils/api.js';
                 )
             },
 
-            order(type){
-                this.selectedOrder=type;
-                this.list.order= this.selectedOrder;
-                var compare=null;
-                if(type==this.orders[0]){
-                    compare =  function(a, b){
-                        if(a.name.toLowerCase() < b.name.toLowerCase())
-                            return -1;
-                        if(a.name.toLowerCase() > b.name.toLowerCase())
-                            return 1;
-
-                        return 0;
+            order(order){
+                this.selectedOrder = order
+                this.tasksLoading=true
+                apiUtils.patchListOrder(this.$axios, this.list.id, order).then(
+                    _ => {
+                        this.updateList()
                     }
-                }
-                else if (type==this.orders[1]){
-                    compare = function(a, b){
-                        var d1 = storageUtils.date(a.date, a.time);
-                        var d2 = storageUtils.date(b.date, b.time);
-                        if(d1==0 && d2!=0)
-                            return 1;
-                        if(d2==0 && d1!=0)
-                            return -1;
-                        if(d1 < d2)
-                            return -1;
-                        if(d1 > d2)
-                            return 1;
-                        return 0;
-                    }
-                }
-                
-                if(compare!=null){
-                    this.tasks.sort(compare);
-                }
-                
+                )
             },
 
 
