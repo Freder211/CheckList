@@ -4,6 +4,7 @@ export default function({$axios, store, redirect, error: nuxtError}){
 
     $axios.onResponseError(
         error => {
+            let userNotValid = 'No active account found with the given credentials'
             if (error.response.data.code == 'token_not_valid'){ //entra se uno token non è valido
                 let {token_class} = error.response.data.messages[0]
                 if (token_class=='AccessToken'){ //entra se il token di accesso è scaduto
@@ -24,6 +25,12 @@ export default function({$axios, store, redirect, error: nuxtError}){
                         }
                     )
                 }
+            }
+            else if(error.response.data.detail==userNotValid){
+                return error
+            }
+            else if(error.response.config.url=='/api/register/' && error.response.status==400){
+                console.log(error)
             }
             else{
                 console.log(error.response)

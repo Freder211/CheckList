@@ -2,7 +2,7 @@
     <div justify='center' align='center' height='100%'>
         <v-card class="mt-10" width="500">
             <v-card-title>
-                Login
+                {{singup ? 'Register' : 'Login'}}
             </v-card-title>
 
             <v-card-actions>
@@ -12,6 +12,7 @@
                             type="text" 
                             label="Username"
                             hide-details="true"
+                            :rules="[value => (value || '').length <= 20 || 'Max 20 characters']"
                             v-model="username"
                         >
                         </v-text-field>
@@ -27,13 +28,25 @@
                         </v-text-field>
                     </v-row>
 
+                    <v-row col='12' class="mb-5" v-if="singup">
+                        <v-text-field
+                            type="password" 
+                            label="Repeat password"
+                            hide-details="true"
+                            v-model="repeatPassword"
+                            :rules="[value => (value || '') == password || 'Max 20 characters']"
+                        >
+                        </v-text-field>
+                    </v-row>
+
                     <v-row col='12' class="mb-5">
                         <v-btn
                             color="primary"
                             block
-                            @click.native="login"
+                            :disabled="this.disableButton"
+                            @click.native="singup ? register() : login()"
                         >
-                            Log in
+                            {{singup ? 'Register' : 'Log in'}}
                         </v-btn>
                     </v-row>
 
@@ -41,9 +54,60 @@
                         <v-btn
                             block
                             text
+                            @click.native="switchMode"
                         >
-                            New user?
+                            
+                            {{singup ? 'Already registered?' : 'New user?'}}
                         </v-btn>
+
+                        <v-dialog
+                            v-model="loading"
+                            hide-overlay
+                            persistent
+                            width="300"
+                        >
+                            <v-card
+                                color="primary"
+                            >
+                                <v-card-text>
+                                Please stand by
+                                <v-progress-linear
+                                    indeterminate
+                                    color="white"
+                                    class="mb-0"
+                                ></v-progress-linear>
+                                </v-card-text>
+                            </v-card>
+                        </v-dialog>
+
+                        <v-dialog
+                            max-width="400"
+                            v-model="showDialog"
+                        >
+                            <v-card>
+                                <v-toolbar
+                                :color="successDialog ? 'success' : 'error' "
+                                dark
+                                >
+                                    <div class="text-h5">
+                                        {{successDialog ? 'Looking good!' : 'Something didn\'t go right'}}
+                                    </div>
+
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        text
+                                        @click="showDialog = false"
+                                    >
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-btn>
+                                </v-toolbar>
+                                <v-card-text class="mt-2">
+                                    <div class="text-h6">
+                                        {{textDialog}}
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-dialog>
                     </v-row>
 
                 </v-container>
@@ -60,11 +124,46 @@ export default {
         return {
             username: '',
             password: '',
+            repeatPassword: '',
+            singup: false,
+
+            loading: false,
+
+            showDialog: false,
+            successDialog: true,
+            textDialog: '',
+        }
+    },
+
+    computed: {
+        disableButton(){
+            if(this.singup)
+                return this.password != this.repeatPassword || this.password=='' || this.username==''
+            else
+                return this.password=='' || this.username==''
         }
     },
 
     methods: {
+        switchMode(){
+            this.singup=!this.singup
+            this.resetInputs()
+        },
+
+        resetInputs(){
+            this.username=''
+            this.password=''
+            this.repeatPassword = ''
+        },
+
+        buildDialog(message, success){
+            this.successDialog=success
+            this.textDialog=message
+            this.showDialog=true
+        },
+
         async login(){
+            this.loading=true
             let credentials = {
                 data: {
                     'username': this.username,
@@ -80,10 +179,34 @@ export default {
                 apiUtils.setToken(this.$axios,token.access)
                 localStorage.setItem("refresh", token.refresh)
 
+
                 this.$router.push({name: 'index'});
             }
             catch(error){
-                console.log(error)
+                this.buildDialog('Credentials not valid.', false)
+                this.resetInputs()
+            }
+            this.loading=false
+        },
+
+        async register(){
+            let credentials = {
+                'username': this.username,
+                'password': this.password,
+            }
+            if (
+                this.password == this.repeatPassword &&
+                this.password!='' && this.username!=''
+            ){
+                this.loading=true
+                try{
+                    await apiUtils.register(this.$axios, credentials)
+                    this.buildDialog('Registration complete!', true)
+                }
+                catch (error){
+                    this.buildDialog('Credentials not valid.', false)
+                }
+                this.loading = false
             }
         }
     }

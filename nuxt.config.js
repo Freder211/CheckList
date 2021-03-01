@@ -57,10 +57,13 @@ export default {
   },
 
   proxy: {
+    '/api/': {
+      target: 'http://localhost:8000',
+    },
     '/api/task/': {
       target: 'http://localhost:8000',
     },
-    '/api-token-auth/': {
+    '/api/token/access/': {
       target: 'http://localhost:8000',
     },
     '/api/lists/': {
@@ -91,7 +94,7 @@ export default {
         endpoints: {
 
           login: {
-            url:'api-token-auth/',
+            url:'api/token/access/',
             method: 'post',
             propertyName: 'data.access',
           },

@@ -10,6 +10,10 @@ async function refreshToken(axios){
     })
 }
 
+//////////USER//////////////
+async function register(axios, credetials){
+    return await axios.$post('/api/register/', credetials)
+}
 
 //////////LISTS//////////
 async function getLists(axios){
@@ -27,7 +31,10 @@ async function patchListName(axios, list_id, name){
     )
 }
 
-async function patchListOrder(axios, list_id, order){
+async function patchListOrder(axios, list_id, order, asc){
+    if(!asc){
+        order='-'+order
+    }
     return await axios.$patch(
         `/api/list/${list_id}/`,
         {'order': order}
@@ -64,6 +71,8 @@ async function deleteTask(axios, list_id, task_id){
 export default {
     setToken,
     refreshToken,
+
+    register,
 
     getLists,
     createList,

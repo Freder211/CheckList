@@ -163,6 +163,8 @@
                                 block
                                 v-bind="attrs"
                                 v-on="on"
+                                :loading="orderLoading"
+                                :disabled="orderLoading"
                             >
                                 <v-icon>mdi-order-bool-descending</v-icon>
                                 Order by:
@@ -181,12 +183,26 @@
                                     block
                                     tile
                                     text
-                                    @click.native="order(o)"
+                                    @click.native="order(o, ascOrder)"
                                 >{{o}}</v-btn>
                             </v-list-item>
                         </v-list>
 
                     </v-menu>
+                </v-col>
+
+                <v-col>
+                    <v-btn
+                        block
+                        :loading="orderLoading"
+                        :disabled="orderLoading"
+                        @click.native="order(selectedOrder, !ascOrder)"
+                    >
+                        <v-icon>
+                            {{this.ascOrder ? 'mdi-sort-ascending' : 'mdi-sort-descending'}}
+                        </v-icon>
+                    </v-btn>
+                    
                 </v-col>
             </v-row>
 
@@ -255,7 +271,6 @@
     
     import storageUtils from '~/utils/storage.js';
     import apiUtils from '~/utils/api.js';
-import api from '~/utils/api.js';
 
     export default {
 
@@ -284,9 +299,12 @@ import api from '~/utils/api.js';
                     'Time'
                 ],
                 selectedOrder: 'Name',
+                ascOrder: true,
+
 
                 tasksLoading: true,
                 createLoading: false,
+                orderLoading: true,
             }
         },
 
@@ -303,9 +321,12 @@ import api from '~/utils/api.js';
 
             async updateList(){
                 this.list = JSON.parse(localStorage.getItem('selectedList'));
-                this.tasks = await apiUtils.getTasks(this.$axios, this.list.id);
+                let res=await apiUtils.getTasks(this.$axios, this.list.id);
+                this.tasks = res.tasks; 
+                this.selectedOrder=res.order;
 
                 this.tasksLoading = false;
+                this.orderLoading = false;
             },
 
             addNew(){
@@ -321,8 +342,9 @@ import api from '~/utils/api.js';
                     apiUtils.createTask(this.$axios, this.list.id, newTask)
                     .then(
                         res => {
-                            this.tasks.unshift(res)
-                            this.createLoading = false;
+                            this.updateList().then(
+                                this.createLoading = false
+                            )
                         }
                     )
 
@@ -349,10 +371,11 @@ import api from '~/utils/api.js';
                 )
             },
 
-            order(order){
-                this.selectedOrder = order
-                this.tasksLoading=true
-                apiUtils.patchListOrder(this.$axios, this.list.id, order).then(
+            order(order, asc){
+                
+                console.log(order);
+                this.orderLoading=true;
+                apiUtils.patchListOrder(this.$axios, this.list.id, order, asc).then(
                     _ => {
                         this.updateList()
                     }
