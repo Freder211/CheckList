@@ -140,7 +140,7 @@
             </v-row>
 
             <v-row justify="center" align="center" align-content="center">
-                <v-col class="px-0" align-self="center">
+                <v-col cols="12" sm="6" class="px-0" align-self="center">
                     <v-btn
                         class="addBtn"
                         :disabled="(!task.name || task.name.length>20) || createLoading"
@@ -153,7 +153,7 @@
                     </v-btn>
                 </v-col>
 
-                <v-col  cols="6" sm="4" class="pr-0" align-self="right">
+                <v-col  cols="8" sm="4" class="pr-0" align-self="right">
                     <v-menu offset-y>
                         <template v-slot:activator="{ on, attrs }">
 
@@ -269,7 +269,6 @@
 
 <script>
     
-    import storageUtils from '~/utils/storage.js';
     import apiUtils from '~/utils/api.js';
 
     export default {
@@ -323,7 +322,16 @@
                 this.list = JSON.parse(localStorage.getItem('selectedList'));
                 let res=await apiUtils.getTasks(this.$axios, this.list.id);
                 this.tasks = res.tasks; 
-                this.selectedOrder=res.order;
+
+                if(res.order.charAt(0)=='-'){
+                    this.selectedOrder=res.order.substring(1)
+                    this.ascOrder=false
+                }
+                else{
+                    this.selectedOrder=res.order
+                    this.ascOrder=true
+                }
+
 
                 this.tasksLoading = false;
                 this.orderLoading = false;
@@ -372,10 +380,12 @@
             },
 
             order(order, asc){
-                
-                console.log(order);
+                let sortedOrder = order
+                if(!asc){
+                    sortedOrder = '-'+order
+                }
                 this.orderLoading=true;
-                apiUtils.patchListOrder(this.$axios, this.list.id, order, asc).then(
+                apiUtils.patchListOrder(this.$axios, this.list.id, sortedOrder).then(
                     _ => {
                         this.updateList()
                     }

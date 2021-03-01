@@ -31,10 +31,7 @@ async function patchListName(axios, list_id, name){
     )
 }
 
-async function patchListOrder(axios, list_id, order, asc){
-    if(!asc){
-        order='-'+order
-    }
+async function patchListOrder(axios, list_id, order){
     return await axios.$patch(
         `/api/list/${list_id}/`,
         {'order': order}
