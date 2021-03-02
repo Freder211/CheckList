@@ -11,8 +11,10 @@
                         <v-text-field
                             type="text" 
                             label="Username"
-                            hide-details="true"
-                            :rules="[value => (value || '').length <= 20 || 'Max 20 characters']"
+                            :rules="[
+                                value => (value || '').length <= 20 || 'Max 20 characters',
+                                value => (value || '').indexOf(' ') < 0 || 'No spaces are allowed',
+                            ]"
                             v-model="username"
                         >
                         </v-text-field>
@@ -22,7 +24,6 @@
                         <v-text-field
                             type="password" 
                             label="Password"
-                            hide-details="true"
                             v-model="password"
                         >
                         </v-text-field>
@@ -32,9 +33,10 @@
                         <v-text-field
                             type="password" 
                             label="Repeat password"
-                            hide-details="true"
                             v-model="repeatPassword"
-                            :rules="[value => (value || '') == password || 'Max 20 characters']"
+                            :rules="[value => (value || '') == password || 'Max 20 characters', 
+
+                            ]"
                         >
                         </v-text-field>
                     </v-row>
@@ -137,10 +139,16 @@ export default {
 
     computed: {
         disableButton(){
-            if(this.singup)
-                return this.password != this.repeatPassword || this.password=='' || this.username==''
-            else
-                return this.password=='' || this.username==''
+            if(this.password=='' || this.username=='' || this.username.indexOf(' ')>=0){
+                return true
+            }
+            else{
+                if(this.singup){
+                    return this.password != this.repeatPassword 
+                }
+
+                return false
+            }
         }
     },
 
@@ -201,6 +209,8 @@ export default {
                 try{
                     await apiUtils.register(this.$axios, credentials)
                     this.buildDialog('Registration complete!', true)
+                    this.singup=false
+                    this.resetInputs()
                 }
                 catch (error){
                     this.buildDialog('Credentials not valid.', false)

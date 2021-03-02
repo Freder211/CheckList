@@ -59,27 +59,6 @@ export default {
   proxy: {
     '/api/': {
       target: 'http://localhost:8000',
-    },
-    '/api/task/': {
-      target: 'http://localhost:8000',
-    },
-    '/api/token/access/': {
-      target: 'http://localhost:8000',
-    },
-    '/api/lists/': {
-      target: 'http://localhost:8000',
-    },
-    '/api/list/': {
-      target: 'http://localhost:8000',
-    },
-    '/api/token/refresh': {
-      target: 'http://localhost:8000',
-    },
-    '/api/user/': {
-      target: 'http://localhost:8000',
-    },
-    '/api/tasks/': {
-      target: 'http://localhost:8000',
     }
   },
 
