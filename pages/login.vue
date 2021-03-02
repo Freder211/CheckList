@@ -174,7 +174,6 @@ export default {
             try{
                 let res = await this.$auth.loginWith("local", credentials);
                 let token = res.data;
-                console.log(token.access)
 
                 apiUtils.setToken(this.$axios,token.access)
                 localStorage.setItem("refresh", token.refresh)

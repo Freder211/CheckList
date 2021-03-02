@@ -43,8 +43,8 @@ async function deleteList(axios, list_id){
 }
 
 ////////TASKS/////////
-async function getTasks(axios, list_id){
-    return await axios.$get(`/api/tasks/${list_id}/`)
+async function getTasks(axios, list_id, page = 1){
+    return await axios.$get(`/api/tasks/${list_id}/${page}`)
 }
 
 async function createTask(axios, list_id, new_task){

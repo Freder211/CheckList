@@ -30,7 +30,6 @@ export default function({$axios, store, redirect, error: nuxtError}){
                 return error
             }
             else if(error.response.config.url=='/api/register/' && error.response.status==400){
-                console.log(error)
             }
             else{
                 console.log(error.response)

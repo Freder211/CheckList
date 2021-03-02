@@ -41,6 +41,7 @@
             <transition-group v-else name="lists" tag="div">
                 <List v-for="l in lists" :key="l.id" :list="l" v-on:removed="remove"/>
             </transition-group>
+
         </v-container>
 
 </template>
@@ -121,7 +122,6 @@
                 apiUtils.getLists(this.$axios).then(
                     lists => {
                         for(var i in lists){
-                            console.log(lists[i]);
                             this.lists.push(lists[i]);
                         }
                         this.listsLoading=false;

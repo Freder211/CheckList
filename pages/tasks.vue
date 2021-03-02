@@ -153,7 +153,7 @@
                     </v-btn>
                 </v-col>
 
-                <v-col  cols="8" sm="4" class="pr-0" align-self="right">
+                <v-col  cols="8" sm="4" class="pr-0">
                     <v-menu offset-y>
                         <template v-slot:activator="{ on, attrs }">
 
@@ -236,6 +236,14 @@
             </v-row>
         </v-container> 
 
+        <div class="text-center">
+            <v-pagination
+                :disabled="(tasksLoading || orderLoading || createLoading)"
+                :length="pages"
+                v-model="selectedPage"
+            ></v-pagination>
+        </div>
+
     </div>
 
 </template>
@@ -304,6 +312,9 @@
                 tasksLoading: true,
                 createLoading: false,
                 orderLoading: true,
+
+                pages: 1,
+                selectedPage: 1,
             }
         },
 
@@ -316,12 +327,20 @@
             this.updateList()
         },
 
+        watch: {
+            selectedPage(){
+                this.updateList()
+            }
+        },
+
         methods: {
 
             async updateList(){
                 this.list = JSON.parse(localStorage.getItem('selectedList'));
-                let res=await apiUtils.getTasks(this.$axios, this.list.id);
+                let res=await apiUtils.getTasks(this.$axios, this.list.id, this.selectedPage);
                 this.tasks = res.tasks; 
+
+                this.pages = res.pages
 
                 if(res.order.charAt(0)=='-'){
                     this.selectedOrder=res.order.substring(1)
@@ -369,12 +388,7 @@
             remove(id){
                 apiUtils.deleteTask(this.$axios, this.list.id, id).then(
                     res => {
-                        for(var i in this.tasks){
-                            if(this.tasks[i].id == id){
-                                this.tasks.splice(i, 1);
-                            }
-                        }
-                        Promise.resolve(true); 
+                        this.updateList().then()
                     }
                 )
             },

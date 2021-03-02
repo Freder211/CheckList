@@ -140,13 +140,7 @@
                     this.$refs.textField.focus();
                 }
                 else if(this.edit.oldName!=this.list.name){
-                    console.log(this.edit.oldName)
                     apiUtils.patchListName(this.$axios, this.list.id, this.list.name)
-                    .then(
-                        res => {
-
-                        }
-                    )
                 }
                 this.editing = !this.editing;
             },
