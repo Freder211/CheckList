@@ -2,7 +2,7 @@
     <v-app-bar app>
 
         <div
-            v-if="showLinks"
+            v-if="showDetails"
             v-for="l in this.links"
             :key="l"
         >
@@ -23,12 +23,19 @@
 
 
 
-        <v-spacer></v-spacer>
+        <v-spacer
+            v-if="showDetails"
+        ></v-spacer>
 
         <v-btn @click="switchMode"  text class="mr-2" fab>
             <v-icon v-if="!this.darkMode">mdi-brightness-5</v-icon>
             <v-icon v-if="this.darkMode">mdi-brightness-2</v-icon>
         </v-btn>
+
+        <v-spacer
+            v-if="!showDetails"
+        ></v-spacer>
+
         <v-btn @click="goGitHub">
             GitHub
             <v-icon>mdi-github</v-icon>
@@ -53,11 +60,21 @@ export default {
         }
     },
 
+    computed: {
+        showDetails(){
+            if(this.showLinks && this.$vuetify.breakpoint.smAndUp)
+                return true
+            
+            return false
+        }
+    },
+
     mounted(){
         this.checkRoute()
 
         this.darkMode=storageUtils.isDark();
         this.$vuetify.theme.dark = this.darkMode;
+        console.log(this.$vuetify.breakpoint)
     },
 
     watch: {
