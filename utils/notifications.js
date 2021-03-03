@@ -11,12 +11,10 @@ function sendNotificationToSw(title, text){
     )
 }
 
-function updateDeadlines(lists){
+function updateDeadlines(tasks){
     deadlines = [];
-    for(var list of lists){
-        for(var task of list.tasks){
-            addTaskToDeadlines(task);
-        }
+    for(var task of tasks){
+        addTaskToDeadlines(task);
     }
 }
 

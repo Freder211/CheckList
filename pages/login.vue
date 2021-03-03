@@ -119,7 +119,9 @@
 </template>
 
 <script>
+import api from '~/utils/api.js'
 import apiUtils from '~/utils/api.js'
+import notfy from '~/utils/notifications.js'
 export default {
 
     data(){
@@ -186,6 +188,11 @@ export default {
                 apiUtils.setToken(this.$axios,token.access)
                 localStorage.setItem("refresh", token.refresh)
 
+                apiUtils.getDeadlines(this.$axios).then(
+                    deadlines => {
+                        notify.updateDeadlines(deadlines)
+                    }
+                )
 
                 this.$router.push({name: 'index'});
             }

@@ -1,3 +1,5 @@
+import notify from './notifications.js'
+
 /////////TOKEN////////////
 function setToken(axios, token){
     axios.setToken(token, 'Bearer');
@@ -17,7 +19,8 @@ async function register(axios, credetials){
 
 //////////LISTS//////////
 async function getLists(axios){
-    return await axios.$get('api/lists/')
+    let lists = await axios.$get('api/lists/')
+    return lists
 }
 
 async function createList(axios, newList){
@@ -48,6 +51,7 @@ async function getTasks(axios, list_id, page = 1){
 }
 
 async function createTask(axios, list_id, new_task){
+    notify.addTaskToDeadlines(new_task)
     return await axios.$post(`/api/task/${list_id}/`, new_task)
 } 
 
@@ -59,9 +63,13 @@ async function checkTask(axios, list_id, task_id, checked){
 }
 
 async function deleteTask(axios, list_id, task_id){
+    notify.removeTaskFromDeadlines(task_id)
     return await axios.$delete(`/api/task/${list_id}/${task_id}/`)
 }
-
+////////DEADLINES///////
+async function getDeadlines(axios){
+    return await axios.$get('/api/deadlines/')
+}
 
 
 
@@ -81,4 +89,6 @@ export default {
     createTask,
     checkTask,
     deleteTask,
+
+    getDeadlines,
 }

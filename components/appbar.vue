@@ -74,7 +74,6 @@ export default {
 
         this.darkMode=storageUtils.isDark();
         this.$vuetify.theme.dark = this.darkMode;
-        console.log(this.$vuetify.breakpoint)
     },
 
     watch: {

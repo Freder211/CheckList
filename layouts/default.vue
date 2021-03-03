@@ -12,6 +12,8 @@
 </template>
 
 <script>
+    import apiUtils from '~/utils/api.js'
+    import notify from '~/utils/notifications.js'
 
     export default{
         layout: 'listLayout',
@@ -27,6 +29,12 @@
 
         mounted(){
             this.askNotificationsPerms();
+            apiUtils.getDeadlines(this.$axios).then(
+                deadlines => {
+                    console.log(deadlines)
+                    notify.updateDeadlines(deadlines)
+                }
+            )
         },
 
         methods: {
