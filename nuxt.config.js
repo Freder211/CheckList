@@ -4,6 +4,10 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
+  server: {
+    host: '0'
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s',
@@ -50,7 +54,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://backend:8000',
     proxyHeader: false,
     credentials: false,
     proxy: true
@@ -58,7 +62,7 @@ export default {
 
   proxy: {
     '/api/': {
-      target: 'http://localhost:8000',
+      target: 'http://backend:8000',
     }
   },
 

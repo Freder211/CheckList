@@ -31,7 +31,6 @@
             this.askNotificationsPerms();
             apiUtils.getDeadlines(this.$axios).then(
                 deadlines => {
-                    console.log(deadlines)
                     notify.updateDeadlines(deadlines)
                 }
             )
