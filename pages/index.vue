@@ -70,6 +70,7 @@
 
 <script>
     import apiUtils from '~/utils/api.js'
+    import notify from '~/utils/notifications.js'
 
     export default {
         transition: 'lists-transition',

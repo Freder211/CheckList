@@ -119,9 +119,8 @@
 </template>
 
 <script>
-import api from '~/utils/api.js'
 import apiUtils from '~/utils/api.js'
-import notfy from '~/utils/notifications.js'
+import notify from '~/utils/notifications.js'
 export default {
 
     data(){

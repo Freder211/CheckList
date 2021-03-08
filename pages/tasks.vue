@@ -322,9 +322,12 @@
             let token = localStorage.getItem('token');
             if(token){
                 this.$axios.setToken(token, 'Bearer');
+                this.updateList()
+            }
+            else{
+                this.$router.push({name: 'login'});
             }
 
-            this.updateList()
         },
 
         watch: {
