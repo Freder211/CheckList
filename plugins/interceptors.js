@@ -5,8 +5,7 @@ export default function({$axios, store, redirect, error: nuxtError}){
     $axios.onResponseError(
         error => {
             let userNotValid = 'No active account found with the given credentials'
-            let noCredentials = 'Authentication credentials were not provided.'
-            if (error.response.data.code == 'token_not_valid' || error.response.data.detail == noCredentials){ //entra se uno token non è valido
+            if (error.response.data.code == 'token_not_valid'){ //entra se uno token non è valido
                 let {token_class} = error.response.data.messages[0]
                 if (token_class=='AccessToken'){ //entra se il token di accesso è scaduto
                     

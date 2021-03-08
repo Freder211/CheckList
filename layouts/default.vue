@@ -29,11 +29,6 @@
 
         mounted(){
             this.askNotificationsPerms();
-            apiUtils.getDeadlines(this.$axios).then(
-                deadlines => {
-                    notify.updateDeadlines(deadlines)
-                }
-            )
         },
 
         methods: {

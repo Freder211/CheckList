@@ -88,8 +88,13 @@
             let token = localStorage.getItem('token');
             if(token){
                 this.$axios.setToken(token, 'Bearer');
+                this.getAllLists();
+
+                apiUtils.getDeadlines(this.$axios).then( deadlines => notify.updateDeadlines(deadlines) )
             }
-            this.getAllLists();
+            else{
+                this.$router.push({name: 'login'});
+            }
         },
 
         methods: {
