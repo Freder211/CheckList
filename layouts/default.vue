@@ -15,8 +15,8 @@
 
 
         <v-main>
-            <v-container fluid>
-                <Nuxt />
+            <v-container style="max-width: 1000px">
+                    <Nuxt />
             </v-container>
         </v-main>
     </v-app>
